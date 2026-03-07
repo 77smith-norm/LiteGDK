@@ -1,0 +1,1279 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "implementation_roadmap",
+  "artifact_name": "prd.json",
+  "project": {
+    "name": "LiteGDK",
+    "tagline": "DarkGDK-inspired educational compatibility SDK built on raylib",
+    "status": "draft",
+    "primary_language": "C++20",
+    "backend": "raylib",
+    "build_system": "CMake",
+    "test_framework": "Catch2",
+    "target_platforms": [
+      "macOS",
+      "Windows",
+      "Linux"
+    ],
+    "primary_use_cases": [
+      "education",
+      "old sample preservation",
+      "2D + simple 3D tutorials",
+      "procedural beginner-friendly API"
+    ],
+    "non_goals": [
+      "100% DarkGDK compatibility",
+      "binary compatibility with historical DarkGDK libraries",
+      "production-grade engine hardening",
+      "recreating DirectX 9 rendering behavior",
+      "shipping a scene editor or IDE"
+    ]
+  },
+  "agent_guidance": {
+    "execution_mode": "incremental",
+    "planning_rule": "Do not start a story until all hard dependencies are complete and merged locally.",
+    "implementation_rule": "Preserve public DarkGDK-style API shape while keeping internals namespaced under litegdk.",
+    "tdd_rule": "Write or update failing Catch2 tests before implementation for all logic that can be tested headlessly.",
+    "change_scope_rule": "Keep each story small enough to review in one PR. Avoid mixing unrelated command families.",
+    "compatibility_rule": "Favor source-friendly behavior over historical quirks. Document approximations explicitly.",
+    "docs_rule": "Update compatibility matrix and examples whenever a new public command family lands.",
+    "quality_gates": [
+      "cmake configure succeeds",
+      "project builds cleanly",
+      "tests pass",
+      "new public API documented",
+      "compatibility tier declared for every new command"
+    ]
+  },
+  "architecture_summary": {
+    "public_entrypoints": [
+      "include/DarkGDK.h",
+      "public db* procedural API functions",
+      "user-defined void DarkGDK() entrypoint"
+    ],
+    "runtime_model": {
+      "style": "single-process global runtime facade with explicit registries",
+      "key_components": [
+        "AppRuntime",
+        "FrameState",
+        "ConfigState",
+        "ImageRegistry",
+        "SpriteRegistry",
+        "SoundRegistry",
+        "MusicRegistry",
+        "CameraRegistry",
+        "ObjectRegistry",
+        "InputSnapshot",
+        "Diagnostics/Compatibility reporting"
+      ]
+    },
+    "repo_layout": {
+      "root_files": [
+        "CMakeLists.txt",
+        "README.md",
+        "LICENSE",
+        "CONTRIBUTING.md",
+        "docs/",
+        "include/",
+        "src/",
+        "tests/",
+        "examples/",
+        "third_party/"
+      ],
+      "include": [
+        "include/DarkGDK.h",
+        "include/LiteGDK/Config.h",
+        "include/LiteGDK/Types.h",
+        "include/LiteGDK/Core.h",
+        "include/LiteGDK/System.h",
+        "include/LiteGDK/Text.h",
+        "include/LiteGDK/Input.h",
+        "include/LiteGDK/Images.h",
+        "include/LiteGDK/Sprites.h",
+        "include/LiteGDK/Sound.h",
+        "include/LiteGDK/Basic3D.h",
+        "include/LiteGDK/Compatibility.h"
+      ],
+      "src": [
+        "src/runtime/",
+        "src/core/",
+        "src/system/",
+        "src/text/",
+        "src/input/",
+        "src/images/",
+        "src/sprites/",
+        "src/sound/",
+        "src/basic3d/",
+        "src/platform/",
+        "src/compat/"
+      ],
+      "tests": [
+        "tests/unit/",
+        "tests/integration/",
+        "tests/fixtures/",
+        "tests/helpers/"
+      ],
+      "docs": [
+        "docs/architecture/",
+        "docs/compatibility/",
+        "docs/testing/",
+        "docs/contributing/"
+      ]
+    },
+    "compatibility_tiers": {
+      "A": "Source-friendly and behaviorally aligned for intended educational use",
+      "B": "Supported with small behavioral differences or limited edge-case coverage",
+      "C": "Approximate/stubbed; compiles and documents limitations",
+      "X": "Unsupported"
+    }
+  },
+  "global_constraints": {
+    "api_constraints": [
+      "Primary include remains DarkGDK.h",
+      "Public API uses db-prefixed free functions",
+      "Asset handles are integer-based",
+      "No exceptions cross the public API boundary",
+      "Prefer deterministic defaults and explicit resettable runtime state"
+    ],
+    "testing_constraints": [
+      "Headless-testable logic must live outside direct raylib draw calls",
+      "Registries, command translation, and frame state must be unit tested",
+      "Every bug fix adds a regression test",
+      "Integration smoke tests must cover at least one textbook-style sample per implemented command family"
+    ],
+    "tooling_constraints": [
+      "CMake presets supported",
+      "VS Code tasks and launch configs provided",
+      "Avoid unnecessary dependencies beyond raylib and Catch2"
+    ]
+  },
+  "milestones": [
+    {
+      "id": "M0",
+      "title": "Foundation and contributor bootstrap",
+      "goal": "Create the minimum repository, build, test, and documentation scaffolding so implementation can proceed safely.",
+      "release_gate": [
+        "Project configures on macOS",
+        "Unit test binary runs",
+        "Sample app binary links",
+        "Contributor docs exist"
+      ],
+      "epics": [
+        {
+          "id": "E0.1",
+          "title": "Repository skeleton",
+          "stories": [
+            {
+              "id": "S0.1.1",
+              "title": "Create initial repo layout",
+              "depends_on": [],
+              "priority": "P0",
+              "complexity": "S",
+              "touches": [
+                "CMakeLists.txt",
+                "include/",
+                "src/",
+                "tests/",
+                "examples/",
+                "docs/"
+              ],
+              "deliverables": [
+                "Folder structure from architecture summary",
+                "Top-level CMake project",
+                "Static or shared library target for LiteGDK",
+                "Example executable target"
+              ],
+              "tests_required": [
+                "CMake configure smoke check"
+              ],
+              "acceptance": [
+                "Fresh clone configures without manual folder creation",
+                "Repository structure matches roadmap repo_layout"
+              ]
+            },
+            {
+              "id": "S0.1.2",
+              "title": "Integrate raylib and Catch2",
+              "depends_on": [
+                "S0.1.1"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "CMakeLists.txt",
+                "cmake/",
+                "third_party/ or FetchContent config"
+              ],
+              "deliverables": [
+                "raylib dependency wired into build",
+                "Catch2 dependency wired into build",
+                "Reusable test target setup"
+              ],
+              "tests_required": [
+                "Dummy test passes in CI/local",
+                "Example links to raylib"
+              ],
+              "acceptance": [
+                "One unit test executable runs successfully",
+                "One example executable links against LiteGDK and raylib"
+              ]
+            },
+            {
+              "id": "S0.1.3",
+              "title": "Add code quality tooling",
+              "depends_on": [
+                "S0.1.2"
+              ],
+              "priority": "P1",
+              "complexity": "S",
+              "touches": [
+                ".editorconfig",
+                ".clang-format",
+                ".gitignore",
+                "CMakePresets.json",
+                ".vscode/"
+              ],
+              "deliverables": [
+                "Formatting config",
+                "Recommended VS Code settings/tasks",
+                "Optional warning presets"
+              ],
+              "tests_required": [],
+              "acceptance": [
+                "Developers can configure, build, and test from VS Code tasks",
+                "Formatting rules are documented"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E0.2",
+          "title": "Contributor and architecture docs",
+          "stories": [
+            {
+              "id": "S0.2.1",
+              "title": "Write README and quick start",
+              "depends_on": [
+                "S0.1.2"
+              ],
+              "priority": "P0",
+              "complexity": "S",
+              "touches": [
+                "README.md",
+                "docs/"
+              ],
+              "deliverables": [
+                "Project purpose",
+                "Build steps",
+                "Run tests steps",
+                "Minimal example"
+              ],
+              "tests_required": [],
+              "acceptance": [
+                "New contributor can build project from README instructions"
+              ]
+            },
+            {
+              "id": "S0.2.2",
+              "title": "Write testing strategy and TDD policy",
+              "depends_on": [
+                "S0.1.2"
+              ],
+              "priority": "P0",
+              "complexity": "S",
+              "touches": [
+                "docs/testing/testing-strategy.md",
+                "CONTRIBUTING.md"
+              ],
+              "deliverables": [
+                "Catch2 conventions",
+                "Unit vs integration split",
+                "Regression test policy"
+              ],
+              "tests_required": [],
+              "acceptance": [
+                "Testing policy names where tests must live and when to add them"
+              ]
+            },
+            {
+              "id": "S0.2.3",
+              "title": "Create compatibility matrix stub",
+              "depends_on": [
+                "S0.2.1"
+              ],
+              "priority": "P1",
+              "complexity": "S",
+              "touches": [
+                "docs/compatibility/commands.md"
+              ],
+              "deliverables": [
+                "Command family table",
+                "Tier definitions A/B/C/X",
+                "Initial placeholders for Core/Text/Input/Images/Sprites/Sound/Basic3D"
+              ],
+              "tests_required": [],
+              "acceptance": [
+                "All command families planned in roadmap appear in compatibility docs"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M1",
+      "title": "Core runtime and application loop",
+      "goal": "Establish the runtime skeleton, global state, app lifecycle, and sync model that all other command families depend on.",
+      "release_gate": [
+        "DarkGDK.h exists",
+        "Runtime can start and stop cleanly",
+        "LoopGDK/dbSync flow works in a minimal sample",
+        "Core registries are resettable between tests"
+      ],
+      "epics": [
+        {
+          "id": "E1.1",
+          "title": "Public API shell",
+          "stories": [
+            {
+              "id": "S1.1.1",
+              "title": "Create DarkGDK.h and public family headers",
+              "depends_on": [
+                "S0.1.2"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "include/DarkGDK.h",
+                "include/LiteGDK/*.h"
+              ],
+              "deliverables": [
+                "Primary include file",
+                "Header fan-out for command families",
+                "Basic type aliases and compatibility macros"
+              ],
+              "tests_required": [
+                "Header-only compile smoke test"
+              ],
+              "acceptance": [
+                "A sample can include only DarkGDK.h and compile"
+              ]
+            },
+            {
+              "id": "S1.1.2",
+              "title": "Define public entrypoint contract",
+              "depends_on": [
+                "S1.1.1"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "include/LiteGDK/Core.h",
+                "src/core/"
+              ],
+              "deliverables": [
+                "User-declared DarkGDK() entrypoint contract",
+                "Generated or manual app bootstrap main wrapper"
+              ],
+              "tests_required": [
+                "Integration sample invokes user DarkGDK entrypoint"
+              ],
+              "acceptance": [
+                "Minimal sample launches and exits using documented entrypoint"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E1.2",
+          "title": "Runtime state and service boundaries",
+          "stories": [
+            {
+              "id": "S1.2.1",
+              "title": "Implement AppRuntime and FrameState",
+              "depends_on": [
+                "S1.1.1"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "src/runtime/AppRuntime.*",
+                "src/runtime/FrameState.*",
+                "tests/unit/runtime/"
+              ],
+              "deliverables": [
+                "Singleton-like runtime facade",
+                "Frame counters",
+                "sync enabled flag",
+                "target FPS / sync rate storage",
+                "clear color and text defaults"
+              ],
+              "tests_required": [
+                "Runtime default state tests",
+                "FrameState mutation tests",
+                "Runtime reset tests"
+              ],
+              "acceptance": [
+                "Runtime state can be initialized, queried, reset, and shutdown deterministically"
+              ]
+            },
+            {
+              "id": "S1.2.2",
+              "title": "Implement registry infrastructure",
+              "depends_on": [
+                "S1.2.1"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "src/runtime/Registry.*",
+                "src/runtime/HandlePolicies.*",
+                "tests/unit/runtime/"
+              ],
+              "deliverables": [
+                "Reusable integer-slot registry template or service",
+                "Occupancy tracking",
+                "Overwrite/replace semantics"
+              ],
+              "tests_required": [
+                "Insert/find/remove tests",
+                "Replace existing handle tests",
+                "Out-of-range and missing-handle tests"
+              ],
+              "acceptance": [
+                "Registry semantics are documented and covered by tests"
+              ]
+            },
+            {
+              "id": "S1.2.3",
+              "title": "Implement diagnostics and compatibility warnings",
+              "depends_on": [
+                "S1.2.1"
+              ],
+              "priority": "P1",
+              "complexity": "S",
+              "touches": [
+                "src/runtime/Diagnostics.*",
+                "include/LiteGDK/Compatibility.h",
+                "tests/unit/runtime/"
+              ],
+              "deliverables": [
+                "Warning sink for approximate/unsupported behavior",
+                "Structured compatibility codes"
+              ],
+              "tests_required": [
+                "Warning emission tests",
+                "Duplicate warning suppression tests if implemented"
+              ],
+              "acceptance": [
+                "Approximate behavior can emit visible, testable diagnostics"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E1.3",
+          "title": "Core commands and loop",
+          "stories": [
+            {
+              "id": "S1.3.1",
+              "title": "Implement window and lifecycle commands",
+              "depends_on": [
+                "S1.2.1"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "include/LiteGDK/Core.h",
+                "src/core/"
+              ],
+              "deliverables": [
+                "dbSyncOn",
+                "dbSyncOff",
+                "dbSyncRate",
+                "dbCLS",
+                "LoopGDK",
+                "shutdown path"
+              ],
+              "tests_required": [
+                "Headless tests for state changes",
+                "Integration smoke test for loop progression"
+              ],
+              "acceptance": [
+                "Minimal sample loop runs until window close or explicit termination"
+              ]
+            },
+            {
+              "id": "S1.3.2",
+              "title": "Implement frame begin/end orchestration",
+              "depends_on": [
+                "S1.2.1",
+                "S1.3.1"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "src/core/FrameRunner.*",
+                "tests/unit/core/",
+                "tests/integration/core/"
+              ],
+              "deliverables": [
+                "Begin frame",
+                "draw submission boundary",
+                "dbSync implementation",
+                "clear-on-sync behavior"
+              ],
+              "tests_required": [
+                "dbSync updates frame counters",
+                "clear flag behavior tests",
+                "integration loop smoke test"
+              ],
+              "acceptance": [
+                "dbSync advances a predictable frame lifecycle"
+              ]
+            },
+            {
+              "id": "S1.3.3",
+              "title": "Implement core system helpers",
+              "depends_on": [
+                "S1.2.1"
+              ],
+              "priority": "P1",
+              "complexity": "S",
+              "touches": [
+                "include/LiteGDK/System.h",
+                "src/system/",
+                "tests/unit/system/"
+              ],
+              "deliverables": [
+                "timer query helpers",
+                "screen size query helpers",
+                "random seed/value helpers used by textbook samples"
+              ],
+              "tests_required": [
+                "Deterministic random tests where seedable",
+                "basic system helper tests"
+              ],
+              "acceptance": [
+                "Core helper commands used by examples are available and documented"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "2D educational core",
+      "goal": "Deliver the command families most important for beginner textbook samples: text, input, images, and sprites.",
+      "release_gate": [
+        "2D sample with text, image, sprite, keyboard input runs",
+        "Image and sprite registries are tested",
+        "Compatibility table updated for all implemented 2D commands"
+      ],
+      "epics": [
+        {
+          "id": "E2.1",
+          "title": "Text commands",
+          "stories": [
+            {
+              "id": "S2.1.1",
+              "title": "Implement basic text drawing commands",
+              "depends_on": [
+                "S1.3.2"
+              ],
+              "priority": "P0",
+              "complexity": "S",
+              "touches": [
+                "include/LiteGDK/Text.h",
+                "src/text/",
+                "tests/unit/text/",
+                "tests/integration/text/"
+              ],
+              "deliverables": [
+                "dbText",
+                "dbCenterText or equivalent if prioritized",
+                "default font/color handling"
+              ],
+              "tests_required": [
+                "Command parameter/state tests",
+                "integration smoke test renders text without crash"
+              ],
+              "acceptance": [
+                "Text commands compile and render in example programs"
+              ]
+            },
+            {
+              "id": "S2.1.2",
+              "title": "Implement text state helpers",
+              "depends_on": [
+                "S2.1.1"
+              ],
+              "priority": "P1",
+              "complexity": "S",
+              "touches": [
+                "src/text/",
+                "tests/unit/text/"
+              ],
+              "deliverables": [
+                "dbInk or color-setting helper subset",
+                "optional text size/style helpers if selected for MVP"
+              ],
+              "tests_required": [
+                "State mutation tests"
+              ],
+              "acceptance": [
+                "Subsequent text draw calls honor current text state"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E2.2",
+          "title": "Input commands",
+          "stories": [
+            {
+              "id": "S2.2.1",
+              "title": "Implement keyboard input snapshot service",
+              "depends_on": [
+                "S1.2.1"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "src/input/InputSnapshot.*",
+                "tests/unit/input/"
+              ],
+              "deliverables": [
+                "current/previous key state model",
+                "poll/update hooks"
+              ],
+              "tests_required": [
+                "Snapshot transition tests",
+                "pressed/held/released semantics tests"
+              ],
+              "acceptance": [
+                "Input state can be tested independently from direct raylib polling"
+              ]
+            },
+            {
+              "id": "S2.2.2",
+              "title": "Implement keyboard and mouse public commands",
+              "depends_on": [
+                "S2.2.1",
+                "S1.3.2"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "include/LiteGDK/Input.h",
+                "src/input/",
+                "tests/unit/input/",
+                "tests/integration/input/"
+              ],
+              "deliverables": [
+                "dbUpKey/dbDownKey/dbLeftKey/dbRightKey or chosen directional subset",
+                "dbKeyState or equivalent generic query",
+                "mouse position/button queries"
+              ],
+              "tests_required": [
+                "Translation tests from snapshot to public API",
+                "integration sample reacts to injected or live input"
+              ],
+              "acceptance": [
+                "A sprite can be moved by keyboard in an example"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E2.3",
+          "title": "Image commands",
+          "stories": [
+            {
+              "id": "S2.3.1",
+              "title": "Implement image asset type and registry",
+              "depends_on": [
+                "S1.2.2"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "src/images/",
+                "tests/unit/images/"
+              ],
+              "deliverables": [
+                "ImageAsset structure",
+                "image registry service",
+                "lifecycle ownership rules"
+              ],
+              "tests_required": [
+                "registry behavior tests",
+                "metadata storage tests"
+              ],
+              "acceptance": [
+                "Images are tracked by integer ID with deterministic replace/delete behavior"
+              ]
+            },
+            {
+              "id": "S2.3.2",
+              "title": "Implement dbLoadImage and image queries",
+              "depends_on": [
+                "S2.3.1",
+                "S1.3.2"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "include/LiteGDK/Images.h",
+                "src/images/",
+                "tests/unit/images/",
+                "tests/integration/images/",
+                "tests/fixtures/assets/"
+              ],
+              "deliverables": [
+                "dbLoadImage",
+                "basic width/height/existence queries",
+                "missing file diagnostics"
+              ],
+              "tests_required": [
+                "successful load tests using fixtures",
+                "missing asset regression tests",
+                "image query tests"
+              ],
+              "acceptance": [
+                "A fixture image can be loaded by ID and queried"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E2.4",
+          "title": "Sprite commands",
+          "stories": [
+            {
+              "id": "S2.4.1",
+              "title": "Implement sprite asset type and registry",
+              "depends_on": [
+                "S1.2.2",
+                "S2.3.1"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "src/sprites/",
+                "tests/unit/sprites/"
+              ],
+              "deliverables": [
+                "Sprite state structure",
+                "position/image linkage",
+                "visibility and transform basics"
+              ],
+              "tests_required": [
+                "sprite registry tests",
+                "default state tests"
+              ],
+              "acceptance": [
+                "Sprites can be created/updated independently of rendering"
+              ]
+            },
+            {
+              "id": "S2.4.2",
+              "title": "Implement dbSprite and sprite manipulation subset",
+              "depends_on": [
+                "S2.4.1",
+                "S2.3.2",
+                "S1.3.2"
+              ],
+              "priority": "P0",
+              "complexity": "L",
+              "touches": [
+                "include/LiteGDK/Sprites.h",
+                "src/sprites/",
+                "tests/unit/sprites/",
+                "tests/integration/sprites/"
+              ],
+              "deliverables": [
+                "dbSprite",
+                "dbPasteImage or equivalent subset if chosen",
+                "dbMoveSprite or position helpers",
+                "basic hide/show or existence helpers"
+              ],
+              "tests_required": [
+                "state mutation tests",
+                "missing image diagnostic tests",
+                "integration sprite render test"
+              ],
+              "acceptance": [
+                "Classic sprite sample compiles and displays expected motion"
+              ]
+            },
+            {
+              "id": "S2.4.3",
+              "title": "Implement 2D render queue ordering rules",
+              "depends_on": [
+                "S2.4.2",
+                "S2.1.1"
+              ],
+              "priority": "P1",
+              "complexity": "M",
+              "touches": [
+                "src/runtime/",
+                "src/sprites/",
+                "src/text/",
+                "tests/unit/runtime/",
+                "tests/integration/sprites/"
+              ],
+              "deliverables": [
+                "Deterministic draw submission order for text and sprites",
+                "documented painter's-order behavior"
+              ],
+              "tests_required": [
+                "ordering tests where feasible",
+                "integration visual smoke test"
+              ],
+              "acceptance": [
+                "Render ordering behavior is documented and stable for examples"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "Audio and simple 3D",
+      "goal": "Extend LiteGDK beyond pure 2D so simple book samples covering sound, camera, and basic objects become viable.",
+      "release_gate": [
+        "Audio fixture plays via sound/music API",
+        "Basic 3D sample shows primitive/object and camera movement",
+        "New commands classified in compatibility matrix"
+      ],
+      "epics": [
+        {
+          "id": "E3.1",
+          "title": "Sound and music commands",
+          "stories": [
+            {
+              "id": "S3.1.1",
+              "title": "Implement sound and music registries",
+              "depends_on": [
+                "S1.2.2"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "src/sound/",
+                "tests/unit/sound/"
+              ],
+              "deliverables": [
+                "SoundAsset",
+                "MusicAsset",
+                "lifecycle and ID management"
+              ],
+              "tests_required": [
+                "registry tests",
+                "replace/unload tests"
+              ],
+              "acceptance": [
+                "Audio assets can be loaded and tracked by integer ID"
+              ]
+            },
+            {
+              "id": "S3.1.2",
+              "title": "Implement core audio commands",
+              "depends_on": [
+                "S3.1.1",
+                "S1.3.2"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "include/LiteGDK/Sound.h",
+                "src/sound/",
+                "tests/unit/sound/",
+                "tests/integration/sound/",
+                "tests/fixtures/assets/"
+              ],
+              "deliverables": [
+                "dbLoadSound and/or dbLoadMusic subset",
+                "dbPlaySound",
+                "stop/pause/resume subset as selected",
+                "basic volume controls if MVP-worthy"
+              ],
+              "tests_required": [
+                "load/query tests",
+                "command-state tests",
+                "audio smoke integration test"
+              ],
+              "acceptance": [
+                "An example can load and trigger audio without crash"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E3.2",
+          "title": "Camera and basic 3D commands",
+          "stories": [
+            {
+              "id": "S3.2.1",
+              "title": "Implement camera state service",
+              "depends_on": [
+                "S1.2.1"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "src/basic3d/CameraState.*",
+                "tests/unit/basic3d/"
+              ],
+              "deliverables": [
+                "default camera config",
+                "position/rotation/look-at state",
+                "projection mode subset"
+              ],
+              "tests_required": [
+                "camera mutation tests",
+                "default state tests"
+              ],
+              "acceptance": [
+                "Camera state can be manipulated independently of draw calls"
+              ]
+            },
+            {
+              "id": "S3.2.2",
+              "title": "Implement basic object registry and primitives",
+              "depends_on": [
+                "S1.2.2"
+              ],
+              "priority": "P0",
+              "complexity": "L",
+              "touches": [
+                "src/basic3d/",
+                "tests/unit/basic3d/",
+                "tests/integration/basic3d/"
+              ],
+              "deliverables": [
+                "Object3D state",
+                "primitive cube/sphere subset",
+                "position/rotation/scale basics"
+              ],
+              "tests_required": [
+                "object registry tests",
+                "transform state tests"
+              ],
+              "acceptance": [
+                "Objects can be created and transformed via integer IDs"
+              ]
+            },
+            {
+              "id": "S3.2.3",
+              "title": "Implement public basic 3D commands",
+              "depends_on": [
+                "S3.2.1",
+                "S3.2.2",
+                "S1.3.2"
+              ],
+              "priority": "P0",
+              "complexity": "L",
+              "touches": [
+                "include/LiteGDK/Basic3D.h",
+                "src/basic3d/",
+                "tests/unit/basic3d/",
+                "tests/integration/basic3d/"
+              ],
+              "deliverables": [
+                "dbMakeObjectCube or equivalent primitive subset",
+                "dbPositionObject",
+                "dbRotateObject",
+                "dbPositionCamera",
+                "dbPointCamera or equivalent",
+                "begin/end 3D draw orchestration"
+              ],
+              "tests_required": [
+                "command translation tests",
+                "integration primitive render test"
+              ],
+              "acceptance": [
+                "A simple 3D textbook-style sample compiles and displays"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M4",
+      "title": "Educational polish and first public preview",
+      "goal": "Make the project usable by others through examples, compatibility reporting, CI, and a documented preview release.",
+      "release_gate": [
+        "Preview release checklist complete",
+        "At least 3 end-to-end examples included",
+        "CI runs build and tests on primary platforms"
+      ],
+      "epics": [
+        {
+          "id": "E4.1",
+          "title": "Examples and sample preservation",
+          "stories": [
+            {
+              "id": "S4.1.1",
+              "title": "Create canonical examples set",
+              "depends_on": [
+                "S2.1.1",
+                "S2.2.2",
+                "S2.3.2",
+                "S2.4.2",
+                "S3.1.2",
+                "S3.2.3"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                "examples/"
+              ],
+              "deliverables": [
+                "hello_text",
+                "sprite_movement",
+                "simple_audio",
+                "basic_3d"
+              ],
+              "tests_required": [
+                "Examples build in CI"
+              ],
+              "acceptance": [
+                "Examples are the documented quick-start path for new users"
+              ]
+            },
+            {
+              "id": "S4.1.2",
+              "title": "Add textbook-style compatibility smoke samples",
+              "depends_on": [
+                "S4.1.1"
+              ],
+              "priority": "P1",
+              "complexity": "M",
+              "touches": [
+                "tests/integration/samples/",
+                "docs/compatibility/"
+              ],
+              "deliverables": [
+                "A few old-style sample ports kept as regression cases"
+              ],
+              "tests_required": [
+                "Compile-and-run smoke coverage where practical"
+              ],
+              "acceptance": [
+                "At least one sample per major family is preserved as a regression artifact"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "E4.2",
+          "title": "CI and release readiness",
+          "stories": [
+            {
+              "id": "S4.2.1",
+              "title": "Set up CI for build and test matrix",
+              "depends_on": [
+                "S0.1.2",
+                "S1.3.2",
+                "S2.4.2"
+              ],
+              "priority": "P0",
+              "complexity": "M",
+              "touches": [
+                ".github/workflows/"
+              ],
+              "deliverables": [
+                "Build job",
+                "unit test job",
+                "integration smoke job as feasible"
+              ],
+              "tests_required": [],
+              "acceptance": [
+                "CI reports pass/fail for supported target matrix"
+              ]
+            },
+            {
+              "id": "S4.2.2",
+              "title": "Publish compatibility matrix and release notes template",
+              "depends_on": [
+                "S0.2.3",
+                "S3.2.3"
+              ],
+              "priority": "P0",
+              "complexity": "S",
+              "touches": [
+                "docs/compatibility/commands.md",
+                "docs/releases/preview-0.1.md"
+              ],
+              "deliverables": [
+                "Command-by-command support table",
+                "Known limitations list",
+                "preview release notes template"
+              ],
+              "tests_required": [],
+              "acceptance": [
+                "Users can see exactly which commands are supported at preview"
+              ]
+            },
+            {
+              "id": "S4.2.3",
+              "title": "Create definition-of-done checklist for future PRs",
+              "depends_on": [
+                "S0.2.2",
+                "S4.2.1"
+              ],
+              "priority": "P1",
+              "complexity": "S",
+              "touches": [
+                "docs/contributing/definition-of-done.md",
+                "pull_request_template.md"
+              ],
+              "deliverables": [
+                "PR checklist",
+                "testing checklist",
+                "docs update checklist",
+                "compatibility-tier declaration checklist"
+              ],
+              "tests_required": [],
+              "acceptance": [
+                "Future contributions have a standard completion bar"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cross_cutting_backlog": [
+    {
+      "id": "X1",
+      "title": "Error handling policy",
+      "description": "Define when public commands silently no-op, emit diagnostics, or return status/query information.",
+      "priority": "P1"
+    },
+    {
+      "id": "X2",
+      "title": "Asset path resolution policy",
+      "description": "Standardize relative path resolution for examples, tests, and user apps.",
+      "priority": "P1"
+    },
+    {
+      "id": "X3",
+      "title": "Headless testing seam design",
+      "description": "Keep raylib-dependent code behind thin adapters so registries and command translation stay testable.",
+      "priority": "P0"
+    },
+    {
+      "id": "X4",
+      "title": "Public command selection rubric",
+      "description": "Choose commands based on textbook prevalence, pedagogical value, and implementation leverage.",
+      "priority": "P1"
+    }
+  ],
+  "acceptance_summary": {
+    "mvp_definition": [
+      "A beginner can build LiteGDK on macOS using CMake and VS Code",
+      "A sample using DarkGDK.h, dbSyncOn, dbLoadImage, dbSprite, dbText, and dbSync compiles and runs",
+      "Keyboard input can move a sprite",
+      "Core audio can be loaded and triggered",
+      "A simple 3D primitive and camera sample runs",
+      "Unit and integration tests pass with Catch2",
+      "Compatibility matrix clearly states what works and what is approximate"
+    ],
+    "definition_of_done_per_story": [
+      "Tests added first or alongside implementation as appropriate",
+      "Public headers compile cleanly",
+      "Docs updated",
+      "Compatibility tier assigned",
+      "No obvious resource leaks in modified area",
+      "Example or regression artifact added when public behavior changes"
+    ]
+  },
+  "risk_register": [
+    {
+      "id": "R1",
+      "risk": "Too much effort spent on obscure historical compatibility instead of educational value",
+      "mitigation": "Use command selection rubric and maintain non-goals in docs"
+    },
+    {
+      "id": "R2",
+      "risk": "raylib calls become tightly coupled to business logic, harming testability",
+      "mitigation": "Keep registries/state/translation in headless-testable services"
+    },
+    {
+      "id": "R3",
+      "risk": "Public API drift away from DarkGDK-style samples",
+      "mitigation": "Review examples and textbook-like code before changing public signatures"
+    },
+    {
+      "id": "R4",
+      "risk": "Global runtime state causes flaky tests",
+      "mitigation": "Implement deterministic runtime reset and fixture helpers early"
+    },
+    {
+      "id": "R5",
+      "risk": "Scope creep into advanced terrain/networking/memblock features",
+      "mitigation": "Keep deferred backlog separate from MVP roadmap"
+    }
+  ],
+  "deferred_backlog": [
+    {
+      "id": "D1",
+      "title": "Advanced collision helpers",
+      "status": "deferred"
+    },
+    {
+      "id": "D2",
+      "title": "Terrain/matrix approximations",
+      "status": "deferred"
+    },
+    {
+      "id": "D3",
+      "title": "Memblock compatibility layer",
+      "status": "deferred"
+    },
+    {
+      "id": "D4",
+      "title": "Networking/multiplayer commands",
+      "status": "deferred"
+    },
+    {
+      "id": "D5",
+      "title": "Additional compatibility aliases from wider DarkGDK surface",
+      "status": "deferred"
+    }
+  ],
+  "suggested_initial_task_sequence": [
+    "S0.1.1",
+    "S0.1.2",
+    "S0.2.1",
+    "S0.2.2",
+    "S1.1.1",
+    "S1.2.1",
+    "S1.2.2",
+    "S1.3.1",
+    "S1.3.2",
+    "S2.1.1",
+    "S2.3.1",
+    "S2.3.2",
+    "S2.4.1",
+    "S2.4.2",
+    "S2.2.1",
+    "S2.2.2"
+  ],
+  "next_task_selector": {
+    "algorithm": [
+      "Collect all stories not yet completed.",
+      "Filter to stories whose depends_on list is fully satisfied.",
+      "Prefer lowest milestone id, then highest priority (P0 before P1), then smallest complexity (S before M before L).",
+      "If multiple stories tie, prefer the one that unlocks the largest number of dependent stories.",
+      "Do not select a story that requires public API changes if foundational tests or docs for that area are missing."
+    ],
+    "first_recommended_story": "S0.1.1"
+  }
+}
