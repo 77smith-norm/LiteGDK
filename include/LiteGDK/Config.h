@@ -1,0 +1,6 @@
+#pragma once
+
+#define LITEGDK_VERSION_MAJOR 0
+#define LITEGDK_VERSION_MINOR 0
+#define LITEGDK_VERSION_PATCH 0
+#define LITEGDK_VERSION_STRING "0.0.0-dev"

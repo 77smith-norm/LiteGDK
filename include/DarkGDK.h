@@ -1,11 +1,13 @@
 #pragma once
 
-// LiteGDK Public API Header
-// Old textbook style, modern toolchain.
-
-void dbSyncOn();
-void dbSyncRate(int rate);
-void dbSync();
-bool LoopGDK();
-void dbSetDisplayMode(int width, int height, int depth);
-void dbCLS();
+#include "LiteGDK/Config.h"
+#include "LiteGDK/Types.h"
+#include "LiteGDK/Compatibility.h"
+#include "LiteGDK/Core.h"
+#include "LiteGDK/System.h"
+#include "LiteGDK/Text.h"
+#include "LiteGDK/Input.h"
+#include "LiteGDK/Images.h"
+#include "LiteGDK/Sprites.h"
+#include "LiteGDK/Sound.h"
+#include "LiteGDK/Basic3D.h"
