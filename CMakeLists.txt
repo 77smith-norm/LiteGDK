@@ -39,6 +39,7 @@ target_link_libraries(litegdk PRIVATE raylib)
 # Tests target
 enable_testing()
 add_executable(litegdk_tests
+    tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp
 )
 target_include_directories(litegdk_tests PRIVATE src)
