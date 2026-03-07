@@ -37,6 +37,12 @@ target_include_directories(litegdk PUBLIC include)
 target_include_directories(litegdk PRIVATE src)
 target_link_libraries(litegdk PRIVATE raylib)
 
+add_library(litegdk_entrypoint STATIC
+    src/core/DarkGDKMain.cpp
+)
+target_include_directories(litegdk_entrypoint PUBLIC include)
+target_link_libraries(litegdk_entrypoint PUBLIC litegdk)
+
 # Tests target
 enable_testing()
 add_executable(litegdk_tests
@@ -53,3 +59,12 @@ add_executable(darkgdk_header_smoke
     tests/compile/test_darkgdk_header_smoke.cpp
 )
 target_link_libraries(darkgdk_header_smoke PRIVATE litegdk)
+
+add_executable(darkgdk_entrypoint_smoke
+    tests/integration/core/test_darkgdk_entrypoint.cpp
+)
+target_link_libraries(darkgdk_entrypoint_smoke PRIVATE litegdk_entrypoint)
+add_test(NAME darkgdk_entrypoint_smoke COMMAND darkgdk_entrypoint_smoke)
+set_tests_properties(darkgdk_entrypoint_smoke PROPERTIES
+    PASS_REGULAR_EXPRESSION "DarkGDK entrypoint invoked"
+)

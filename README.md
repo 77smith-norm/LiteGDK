@@ -59,7 +59,7 @@ header:
 ```cpp
 #include "DarkGDK.h"
 
-int main() {
+void DarkGDK() {
     dbSyncOn();
     dbSyncRate(60);
 
@@ -67,13 +67,13 @@ int main() {
         dbCLS();
         dbSync();
     }
-
-    return 0;
 }
 ```
 
 At the current milestone the loop commands are still runtime stubs, but this is
-the source shape LiteGDK is building toward.
+the source shape LiteGDK is building toward. Targets that use `void DarkGDK()`
+should link against `litegdk_entrypoint`, which supplies the bootstrap `main()`
+wrapper.
 
 ## Documentation
 

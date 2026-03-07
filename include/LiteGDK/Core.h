@@ -1,5 +1,7 @@
 #pragma once
 
+void DarkGDK();
+
 void dbSyncOn();
 void dbSyncRate(int rate);
 void dbSync();
