@@ -1,5 +1,4 @@
 #include "DarkGDK.h"
-#include "LiteGDK/Runtime.h"
 
 void dbSyncOn() {}
 void dbSyncRate(int rate) {}
