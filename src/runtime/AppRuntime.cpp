@@ -18,6 +18,7 @@ void AppRuntime::shutdown() {
 void AppRuntime::reset() {
     initialized_ = false;
     running_ = false;
+    diagnostics_.clear();
     frameState_.reset();
 }
 
@@ -27,6 +28,14 @@ bool AppRuntime::isInitialized() const {
 
 bool AppRuntime::isRunning() const {
     return running_;
+}
+
+Diagnostics& AppRuntime::diagnostics() {
+    return diagnostics_;
+}
+
+const Diagnostics& AppRuntime::diagnostics() const {
+    return diagnostics_;
 }
 
 FrameState& AppRuntime::frameState() {

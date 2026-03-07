@@ -30,6 +30,7 @@ FetchContent_MakeAvailable(Catch2)
 add_library(litegdk
     src/compat/DarkGDK.cpp
     src/runtime/AppRuntime.cpp
+    src/runtime/Diagnostics.cpp
     src/runtime/FrameState.cpp
 )
 target_include_directories(litegdk PUBLIC include)
@@ -39,6 +40,7 @@ target_link_libraries(litegdk PRIVATE raylib)
 # Tests target
 enable_testing()
 add_executable(litegdk_tests
+    tests/unit/runtime/test_diagnostics.cpp
     tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp
 )

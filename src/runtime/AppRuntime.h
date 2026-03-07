@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Diagnostics.h"
 #include "FrameState.h"
 
 namespace litegdk {
@@ -14,12 +15,16 @@ public:
     bool isInitialized() const;
     bool isRunning() const;
 
+    Diagnostics& diagnostics();
+    const Diagnostics& diagnostics() const;
+
     FrameState& frameState();
     const FrameState& frameState() const;
 
 private:
     bool initialized_{false};
     bool running_{false};
+    Diagnostics diagnostics_{};
     FrameState frameState_{};
 };
 
