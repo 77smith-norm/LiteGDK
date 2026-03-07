@@ -70,10 +70,10 @@ void DarkGDK() {
 }
 ```
 
-At the current milestone the loop commands are still runtime stubs, but this is
-the source shape LiteGDK is building toward. Targets that use `void DarkGDK()`
-should link against `litegdk_entrypoint`, which supplies the bootstrap `main()`
-wrapper.
+At the current milestone the lifecycle shell is in place, but window/backend
+behavior and `dbSync()` frame submission are still stubs. Targets that use
+`void DarkGDK()` should link against `litegdk_entrypoint`, which supplies the
+bootstrap `main()` wrapper.
 
 ## Documentation
 

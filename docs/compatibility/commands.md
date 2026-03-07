@@ -13,7 +13,7 @@ LiteGDK tracks support at the command-family level during the early milestones.
 
 | Family | Tier | Notes |
 | --- | --- | --- |
-| Core | X | Not yet implemented |
+| Core | C | Entrypoint and lifecycle shell implemented; rendering and backend window behavior still incomplete |
 | Text | X | Not yet implemented |
 | Input | X | Not yet implemented |
 | Images | X | Not yet implemented |

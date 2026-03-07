@@ -13,6 +13,7 @@ FrameState::FrameState() {
 
 void FrameState::reset() {
     frameCount_ = 0;
+    clearRequested_ = false;
     syncEnabled_ = true;
     syncRate_ = kDefaultSyncRate;
     clearColor_ = kDefaultClearColor;
@@ -25,6 +26,10 @@ void FrameState::advanceFrame() {
 
 std::uint64_t FrameState::frameCount() const {
     return frameCount_;
+}
+
+bool FrameState::clearRequested() const {
+    return clearRequested_;
 }
 
 bool FrameState::syncEnabled() const {
@@ -41,6 +46,10 @@ Color FrameState::clearColor() const {
 
 Color FrameState::textColor() const {
     return textColor_;
+}
+
+void FrameState::setClearRequested(bool requested) {
+    clearRequested_ = requested;
 }
 
 void FrameState::setSyncEnabled(bool enabled) {

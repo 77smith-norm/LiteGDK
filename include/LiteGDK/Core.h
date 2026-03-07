@@ -3,6 +3,7 @@
 void DarkGDK();
 
 void dbSyncOn();
+void dbSyncOff();
 void dbSyncRate(int rate);
 void dbSync();
 bool LoopGDK();

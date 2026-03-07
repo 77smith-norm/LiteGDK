@@ -8,16 +8,19 @@ AppRuntime::AppRuntime() {
 void AppRuntime::initialize() {
     initialized_ = true;
     running_ = true;
+    shutdownRequested_ = false;
 }
 
 void AppRuntime::shutdown() {
     running_ = false;
     initialized_ = false;
+    shutdownRequested_ = true;
 }
 
 void AppRuntime::reset() {
     initialized_ = false;
     running_ = false;
+    shutdownRequested_ = false;
     diagnostics_.clear();
     frameState_.reset();
 }
@@ -28,6 +31,10 @@ bool AppRuntime::isInitialized() const {
 
 bool AppRuntime::isRunning() const {
     return running_;
+}
+
+bool AppRuntime::isShutdownRequested() const {
+    return shutdownRequested_;
 }
 
 Diagnostics& AppRuntime::diagnostics() {

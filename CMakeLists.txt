@@ -29,6 +29,7 @@ FetchContent_MakeAvailable(Catch2)
 # Library target
 add_library(litegdk
     src/compat/DarkGDK.cpp
+    src/core/Lifecycle.cpp
     src/runtime/AppRuntime.cpp
     src/runtime/Diagnostics.cpp
     src/runtime/FrameState.cpp
@@ -46,6 +47,7 @@ target_link_libraries(litegdk_entrypoint PUBLIC litegdk)
 # Tests target
 enable_testing()
 add_executable(litegdk_tests
+    tests/unit/core/test_lifecycle.cpp
     tests/unit/runtime/test_diagnostics.cpp
     tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp
@@ -67,4 +69,14 @@ target_link_libraries(darkgdk_entrypoint_smoke PRIVATE litegdk_entrypoint)
 add_test(NAME darkgdk_entrypoint_smoke COMMAND darkgdk_entrypoint_smoke)
 set_tests_properties(darkgdk_entrypoint_smoke PROPERTIES
     PASS_REGULAR_EXPRESSION "DarkGDK entrypoint invoked"
+)
+
+add_executable(darkgdk_loop_smoke
+    tests/integration/core/test_loop_gdk.cpp
+)
+target_include_directories(darkgdk_loop_smoke PRIVATE src)
+target_link_libraries(darkgdk_loop_smoke PRIVATE litegdk_entrypoint)
+add_test(NAME darkgdk_loop_smoke COMMAND darkgdk_loop_smoke)
+set_tests_properties(darkgdk_loop_smoke PROPERTIES
+    PASS_REGULAR_EXPRESSION "LoopGDK iterations=1"
 )

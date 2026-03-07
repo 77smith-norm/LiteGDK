@@ -14,6 +14,7 @@ public:
 
     bool isInitialized() const;
     bool isRunning() const;
+    bool isShutdownRequested() const;
 
     Diagnostics& diagnostics();
     const Diagnostics& diagnostics() const;
@@ -24,6 +25,7 @@ public:
 private:
     bool initialized_{false};
     bool running_{false};
+    bool shutdownRequested_{false};
     Diagnostics diagnostics_{};
     FrameState frameState_{};
 };
