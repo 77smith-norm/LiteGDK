@@ -19,12 +19,14 @@ public:
 
     std::uint64_t frameCount() const;
     bool clearRequested() const;
+    bool frameActive() const;
     bool syncEnabled() const;
     int syncRate() const;
     Color clearColor() const;
     Color textColor() const;
 
     void setClearRequested(bool requested);
+    void setFrameActive(bool active);
     void setSyncEnabled(bool enabled);
     void setSyncRate(int rate);
     void setClearColor(Color color);
@@ -33,6 +35,7 @@ public:
 private:
     std::uint64_t frameCount_{0};
     bool clearRequested_{false};
+    bool frameActive_{false};
     bool syncEnabled_{true};
     int syncRate_{60};
     Color clearColor_{};

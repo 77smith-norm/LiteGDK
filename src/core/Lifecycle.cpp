@@ -1,3 +1,4 @@
+#include "FrameRunner.h"
 #include "Lifecycle.h"
 
 #include "runtime/AppRuntime.h"
@@ -58,6 +59,7 @@ bool loop() {
     }
 
     ensureInitialized(app);
+    beginFrame();
     return app.isRunning();
 }
 

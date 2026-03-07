@@ -1,4 +1,5 @@
 #include "DarkGDK.h"
+#include "core/FrameRunner.h"
 #include "core/Lifecycle.h"
 
 void dbSyncOn() {
@@ -13,7 +14,9 @@ void dbSyncRate(int rate) {
     litegdk::setSyncRate(rate);
 }
 
-void dbSync() {}
+void dbSync() {
+    litegdk::syncFrame();
+}
 
 bool LoopGDK() {
     return litegdk::loop();
