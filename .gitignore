@@ -1,0 +1,4 @@
+/build/
+/.tooling/
+/compile_commands.json
+/.DS_Store
