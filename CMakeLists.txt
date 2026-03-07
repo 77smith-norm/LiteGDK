@@ -48,3 +48,8 @@ target_include_directories(litegdk_tests PRIVATE src)
 target_link_libraries(litegdk_tests PRIVATE litegdk Catch2::Catch2WithMain)
 include(Catch)
 catch_discover_tests(litegdk_tests)
+
+add_executable(darkgdk_header_smoke
+    tests/compile/test_darkgdk_header_smoke.cpp
+)
+target_link_libraries(darkgdk_header_smoke PRIVATE litegdk)
