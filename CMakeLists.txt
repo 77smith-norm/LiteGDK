@@ -34,6 +34,7 @@ add_library(litegdk
     src/runtime/AppRuntime.cpp
     src/runtime/Diagnostics.cpp
     src/runtime/FrameState.cpp
+    src/system/SystemServices.cpp
 )
 target_include_directories(litegdk PUBLIC include)
 target_include_directories(litegdk PRIVATE src)
@@ -53,6 +54,7 @@ add_executable(litegdk_tests
     tests/unit/runtime/test_diagnostics.cpp
     tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp
+    tests/unit/system/test_system.cpp
 )
 target_include_directories(litegdk_tests PRIVATE src)
 target_link_libraries(litegdk_tests PRIVATE litegdk Catch2::Catch2WithMain)

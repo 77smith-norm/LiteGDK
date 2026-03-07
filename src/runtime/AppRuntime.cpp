@@ -1,6 +1,12 @@
 #include "AppRuntime.h"
 
 namespace litegdk {
+namespace {
+constexpr int kDefaultDisplayWidth = 800;
+constexpr int kDefaultDisplayHeight = 600;
+constexpr int kDefaultDisplayDepth = 32;
+}  // namespace
+
 AppRuntime::AppRuntime() {
     reset();
 }
@@ -21,6 +27,9 @@ void AppRuntime::reset() {
     initialized_ = false;
     running_ = false;
     shutdownRequested_ = false;
+    displayWidth_ = kDefaultDisplayWidth;
+    displayHeight_ = kDefaultDisplayHeight;
+    displayDepth_ = kDefaultDisplayDepth;
     diagnostics_.clear();
     frameState_.reset();
 }
@@ -35,6 +44,24 @@ bool AppRuntime::isRunning() const {
 
 bool AppRuntime::isShutdownRequested() const {
     return shutdownRequested_;
+}
+
+int AppRuntime::displayWidth() const {
+    return displayWidth_;
+}
+
+int AppRuntime::displayHeight() const {
+    return displayHeight_;
+}
+
+int AppRuntime::displayDepth() const {
+    return displayDepth_;
+}
+
+void AppRuntime::setDisplayMode(int width, int height, int depth) {
+    displayWidth_ = width;
+    displayHeight_ = height;
+    displayDepth_ = depth;
 }
 
 Diagnostics& AppRuntime::diagnostics() {

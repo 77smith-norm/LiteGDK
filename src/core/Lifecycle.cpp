@@ -70,9 +70,7 @@ void setDisplayMode(int width, int height, int depth) {
     }
 
     ensureInitialized(app);
-    (void)width;
-    (void)height;
-    (void)depth;
+    app.setDisplayMode(width, height, depth);
 }
 
 void requestShutdown() {

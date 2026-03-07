@@ -1,6 +1,7 @@
 #include "DarkGDK.h"
 #include "core/FrameRunner.h"
 #include "core/Lifecycle.h"
+#include "system/SystemServices.h"
 
 void dbSyncOn() {
     litegdk::syncOn();
@@ -28,4 +29,24 @@ void dbSetDisplayMode(int width, int height, int depth) {
 
 void dbCLS() {
     litegdk::clearScreen();
+}
+
+int dbScreenWidth() {
+    return litegdk::screenWidth();
+}
+
+int dbScreenHeight() {
+    return litegdk::screenHeight();
+}
+
+int dbTimer() {
+    return litegdk::timerMilliseconds();
+}
+
+void dbRandomize(int seed) {
+    litegdk::randomize(seed);
+}
+
+int dbRnd(int max) {
+    return litegdk::rnd(max);
 }
