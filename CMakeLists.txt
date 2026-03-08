@@ -67,6 +67,8 @@ add_library(litegdk_entrypoint STATIC
 target_include_directories(litegdk_entrypoint PUBLIC include)
 target_link_libraries(litegdk_entrypoint PUBLIC litegdk)
 
+add_subdirectory(examples)
+
 # Tests target
 enable_testing()
 add_executable(litegdk_tests

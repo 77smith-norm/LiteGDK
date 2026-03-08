@@ -7,9 +7,9 @@ modular and testable.
 
 ## Current status
 
-The repository currently contains the foundation scaffold and the first runtime
-tests. The classic app loop and command families are still being implemented,
-so the public API is intentionally minimal for now.
+Milestones M0 through M3 are complete. LiteGDK now ships a usable educational
+subset across core loop, text, input, images, sprites, sound, and basic 3D,
+with the remaining preview work focused on examples, CI, and release docs.
 
 ## Prerequisites
 
@@ -70,10 +70,20 @@ void DarkGDK() {
 }
 ```
 
-At the current milestone the lifecycle shell is in place, but window/backend
-behavior and `dbSync()` frame submission are still stubs. Targets that use
-`void DarkGDK()` should link against `litegdk_entrypoint`, which supplies the
-bootstrap `main()` wrapper.
+Targets that use `void DarkGDK()` should link against `litegdk_entrypoint`,
+which supplies the bootstrap `main()` wrapper for textbook-style programs.
+
+## Textbook examples
+
+Canonical quick-start samples now live under `examples/textbook/`:
+
+- `hello_text`
+- `sprite_movement`
+- `simple_audio`
+- `basic_3d`
+
+After building, the example executables are emitted under
+`build/examples/textbook/`.
 
 ## Documentation
 
