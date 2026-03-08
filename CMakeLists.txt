@@ -36,6 +36,7 @@ add_library(litegdk
     src/compat/Text.cpp
     src/backend/RaylibBackend.cpp
     src/basic3d/CameraState.cpp
+    src/basic3d/ObjectRegistry.cpp
     src/core/FrameRunner.cpp
     src/core/Lifecycle.cpp
     src/images/ImageCommands.cpp
@@ -68,6 +69,7 @@ target_link_libraries(litegdk_entrypoint PUBLIC litegdk)
 enable_testing()
 add_executable(litegdk_tests
     tests/unit/basic3d/test_camera_state.cpp
+    tests/unit/basic3d/test_object_registry.cpp
     tests/unit/core/test_frame_runner.cpp
     tests/unit/core/test_lifecycle.cpp
     tests/unit/images/test_image_commands.cpp
