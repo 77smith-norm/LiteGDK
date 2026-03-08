@@ -101,8 +101,6 @@ public:
             return std::nullopt;
         }
 
-        unloadImage(imageId);
-
         const Image image = LoadImage(std::string(path).c_str());
         if (image.data == nullptr || image.width <= 0 || image.height <= 0) {
             return std::nullopt;
@@ -113,8 +111,17 @@ public:
             .height = image.height,
         };
 
-        textures_.insert_or_assign(imageId, LoadTextureFromImage(image));
+        const auto newTexture = LoadTextureFromImage(image);
         UnloadImage(image);
+
+        auto replaced = textures_.find(imageId);
+        if (replaced != textures_.end()) {
+            UnloadTexture(replaced->second);
+            replaced->second = newTexture;
+        } else {
+            textures_.insert_or_assign(imageId, newTexture);
+        }
+
         return result;
     }
 

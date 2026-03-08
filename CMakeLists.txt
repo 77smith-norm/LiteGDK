@@ -29,10 +29,12 @@ FetchContent_MakeAvailable(Catch2)
 # Library target
 add_library(litegdk
     src/compat/DarkGDK.cpp
+    src/compat/Images.cpp
     src/compat/Text.cpp
     src/backend/RaylibBackend.cpp
     src/core/FrameRunner.cpp
     src/core/Lifecycle.cpp
+    src/images/ImageCommands.cpp
     src/images/ImageRegistry.cpp
     src/runtime/AppRuntime.cpp
     src/runtime/Diagnostics.cpp
@@ -56,6 +58,7 @@ enable_testing()
 add_executable(litegdk_tests
     tests/unit/core/test_frame_runner.cpp
     tests/unit/core/test_lifecycle.cpp
+    tests/unit/images/test_image_commands.cpp
     tests/unit/images/test_image_registry.cpp
     tests/unit/runtime/test_diagnostics.cpp
     tests/unit/runtime/test_registry.cpp
@@ -101,4 +104,14 @@ target_link_libraries(darkgdk_text_smoke PRIVATE litegdk)
 add_test(NAME darkgdk_text_smoke COMMAND darkgdk_text_smoke)
 set_tests_properties(darkgdk_text_smoke PROPERTIES
     PASS_REGULAR_EXPRESSION "Text draws=1 frames=1"
+)
+
+add_executable(darkgdk_image_smoke
+    tests/integration/images/test_image_smoke.cpp
+)
+target_include_directories(darkgdk_image_smoke PRIVATE src tests)
+target_link_libraries(darkgdk_image_smoke PRIVATE litegdk)
+add_test(NAME darkgdk_image_smoke COMMAND darkgdk_image_smoke)
+set_tests_properties(darkgdk_image_smoke PROPERTIES
+    PASS_REGULAR_EXPRESSION "Image exists=1 width=2 height=1"
 )

@@ -28,6 +28,7 @@ public:
         textDraws.clear();
         spriteDraws.clear();
         imageLoadRequests.clear();
+        loadedImageIds.clear();
         unloadedImageIds.clear();
         configuredImages.clear();
         inputState = {};
