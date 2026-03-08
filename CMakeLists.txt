@@ -43,6 +43,8 @@ add_library(litegdk
     src/runtime/AppRuntime.cpp
     src/runtime/Diagnostics.cpp
     src/runtime/FrameState.cpp
+    src/sound/MusicRegistry.cpp
+    src/sound/SoundRegistry.cpp
     src/sprites/SpriteCommands.cpp
     src/sprites/SpriteRegistry.cpp
     src/system/SystemServices.cpp
@@ -72,6 +74,7 @@ add_executable(litegdk_tests
     tests/unit/runtime/test_render_order.cpp
     tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp
+    tests/unit/sound/test_audio_registry.cpp
     tests/unit/sprites/test_sprite_commands.cpp
     tests/unit/sprites/test_sprite_registry.cpp
     tests/unit/text/test_text.cpp
