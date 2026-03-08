@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "input/InputKeys.h"
+#include "sound/AudioCommands.h"
 #include "raylib.h"
 #include "rlgl.h"
 
@@ -418,10 +419,12 @@ public:
 
 private:
     void ensureAudioDeviceOpen() {
-        if (!audioOpen_) {
-            InitAudioDevice();
-            audioOpen_ = IsAudioDeviceReady();
+        if (audioOpen_ || !litegdk::audioInitializationAllowed()) {
+            return;
         }
+
+        InitAudioDevice();
+        audioOpen_ = IsAudioDeviceReady();
     }
 
     void unloadTextures() {

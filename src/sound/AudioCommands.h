@@ -3,6 +3,8 @@
 #include <string_view>
 
 namespace litegdk {
+bool audioInitializationAllowed();
+
 void loadSound(std::string_view filename, int soundId);
 void deleteSound(int soundId);
 void playSound(int soundId);

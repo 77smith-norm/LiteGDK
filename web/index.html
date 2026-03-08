@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LiteGDK Web Gallery</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #08101a;
+      --panel: rgba(15, 23, 36, 0.9);
+      --panel-border: rgba(155, 231, 255, 0.18);
+      --text: #f4f7fb;
+      --muted: #98acc1;
+      --accent: #9be7ff;
+      --accent-strong: #f4e7a1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Avenir Next", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(155, 231, 255, 0.14), transparent 30%),
+        linear-gradient(180deg, #101a29 0%, var(--bg) 60%, #04070d 100%);
+    }
+
+    main {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      padding: 48px 20px 56px;
+    }
+
+    header {
+      margin-bottom: 28px;
+    }
+
+    header p {
+      margin: 0 0 10px;
+      color: var(--accent-strong);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.88rem;
+    }
+
+    header h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 1.02;
+    }
+
+    header span {
+      display: block;
+      max-width: 48rem;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      display: grid;
+      gap: 12px;
+      padding: 20px;
+      border-radius: 22px;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .card:hover,
+    .card:focus-visible {
+      transform: translateY(-4px);
+      border-color: rgba(244, 231, 161, 0.45);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      outline: none;
+    }
+
+    .card strong {
+      font-size: 1.2rem;
+    }
+
+    .card span {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .card em {
+      color: var(--accent);
+      font-style: normal;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p>LiteGDK</p>
+      <h1>WebAssembly textbook gallery</h1>
+      <span>
+        Four canonical LiteGDK samples, compiled for the browser with Emscripten and the same
+        DarkGDK-style `db*` API used by the native targets.
+      </span>
+    </header>
+
+    <section class="grid">
+      <a class="card" href="hello_text.html">
+        <strong>hello_text</strong>
+        <span>Window loop, `dbText`, and `dbSync` in the smallest possible sample.</span>
+        <em>Launch example</em>
+      </a>
+      <a class="card" href="sprite_movement.html">
+        <strong>sprite_movement</strong>
+        <span>Loads a sprite atlas from the packaged virtual filesystem and moves it with arrow keys.</span>
+        <em>Launch example</em>
+      </a>
+      <a class="card" href="simple_audio.html">
+        <strong>simple_audio</strong>
+        <span>Demonstrates web-safe audio startup and replaying a sound after the initial click-to-start.</span>
+        <em>Launch example</em>
+      </a>
+      <a class="card" href="basic_3d.html">
+        <strong>basic_3d</strong>
+        <span>Rotating cube, camera setup, and the LiteGDK 3D teaching path running under WebGL.</span>
+        <em>Launch example</em>
+      </a>
+    </section>
+  </main>
+</body>
+</html>

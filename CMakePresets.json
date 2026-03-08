@@ -15,6 +15,20 @@
                 "CMAKE_BUILD_TYPE": "Debug",
                 "FETCHCONTENT_UPDATES_DISCONNECTED": "ON"
             }
+        },
+        {
+            "name": "wasm",
+            "displayName": "WASM (Emscripten)",
+            "description": "Configure a Release WebAssembly build with the Emscripten toolchain.",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build-wasm",
+            "toolchainFile": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "FETCHCONTENT_UPDATES_DISCONNECTED": "ON",
+                "PLATFORM": "Web",
+                "BUILD_EXAMPLES": "OFF"
+            }
         }
     ],
     "buildPresets": [
@@ -22,6 +36,11 @@
             "name": "debug",
             "displayName": "Build Debug",
             "configurePreset": "debug"
+        },
+        {
+            "name": "wasm",
+            "displayName": "Build WASM",
+            "configurePreset": "wasm"
         }
     ],
     "testPresets": [

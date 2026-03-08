@@ -1,0 +1,44 @@
+name: Web Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-wasm:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup emsdk
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.61
+
+      - name: Install Ninja
+        run: sudo apt-get update && sudo apt-get install -y ninja-build
+
+      - name: Configure (WASM)
+        run: emcmake cmake --preset wasm
+
+      - name: Build
+        run: cmake --build build-wasm --config Release
+
+      - name: Collect output
+        run: |
+          mkdir -p gh-pages
+          cp build-wasm/examples/textbook/*.html gh-pages/
+          cp build-wasm/examples/textbook/*.js gh-pages/
+          cp build-wasm/examples/textbook/*.wasm gh-pages/
+          cp build-wasm/examples/textbook/*.data gh-pages/ 2>/dev/null || true
+          cp web/index.html gh-pages/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages

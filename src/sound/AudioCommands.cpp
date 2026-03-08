@@ -5,11 +5,21 @@
 #include <string>
 #include <string_view>
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#endif
+
 #include "runtime/AppRuntime.h"
 #include "runtime/HandlePolicies.h"
 
 namespace {
 constexpr auto kAudioCommandTier = litegdk::CompatibilityTier::B;
+
+#ifdef __EMSCRIPTEN__
+EM_JS(int, litegdkAudioInteractionReady, (), {
+    return (typeof window !== "undefined" && window.__litegdkAudioReady) ? 1 : 0;
+});
+#endif
 
 int clampVolume(int volume) {
     return std::clamp(volume, 0, 100);
@@ -46,6 +56,14 @@ bool validateHandle(litegdk::AppRuntime& app, int handle, std::string_view comma
 }  // namespace
 
 namespace litegdk {
+bool audioInitializationAllowed() {
+#ifdef __EMSCRIPTEN__
+    return litegdkAudioInteractionReady() != 0;
+#else
+    return true;
+#endif
+}
+
 void loadSound(std::string_view filename, int soundId) {
     auto& app = runtime();
     if (app.isShutdownRequested() || !validateHandle(app, soundId, "dbLoadSound", "Sound")) {

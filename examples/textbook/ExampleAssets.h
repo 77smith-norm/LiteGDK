@@ -8,8 +8,12 @@
 inline std::filesystem::path textbookAssetPath(std::string_view filename) {
     namespace fs = std::filesystem;
 
-    const fs::path cwd = fs::current_path();
     const fs::path name{std::string(filename)};
+
+#ifdef __EMSCRIPTEN__
+    return fs::path("/assets") / name;
+#else
+    const fs::path cwd = fs::current_path();
     const std::array<fs::path, 5> candidates{
         cwd / "assets" / name,
         cwd / "examples" / "textbook" / "assets" / name,
@@ -25,4 +29,5 @@ inline std::filesystem::path textbookAssetPath(std::string_view filename) {
     }
 
     return cwd / "examples" / "textbook" / "assets" / name;
+#endif
 }
