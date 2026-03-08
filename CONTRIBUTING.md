@@ -22,6 +22,11 @@ The short version:
 - Use `tests/integration/` for smoke coverage that touches graphics, audio, or
   other backend seams.
 
+## Definition of done
+
+Before opening or merging a change, walk through
+`docs/contributing/definition-of-done.md`.
+
 ## Tooling
 
 - Formatting rules: `.editorconfig` and `.clang-format`
