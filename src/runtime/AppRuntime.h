@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "images/ImageRegistry.h"
 #include "Backend.h"
 #include "Diagnostics.h"
 #include "FrameState.h"
@@ -37,6 +38,8 @@ public:
     FrameState& frameState();
     const FrameState& frameState() const;
 
+    ImageRegistry& images();
+    const ImageRegistry& images() const;
     TextService& text();
     const TextService& text() const;
     void renderFrame();
@@ -51,6 +54,7 @@ private:
     std::unique_ptr<Backend> backend_{};
     Diagnostics diagnostics_{};
     FrameState frameState_{};
+    ImageRegistry images_{};
     TextService text_{};
 };
 

@@ -33,6 +33,7 @@ add_library(litegdk
     src/backend/RaylibBackend.cpp
     src/core/FrameRunner.cpp
     src/core/Lifecycle.cpp
+    src/images/ImageRegistry.cpp
     src/runtime/AppRuntime.cpp
     src/runtime/Diagnostics.cpp
     src/runtime/FrameState.cpp
@@ -55,6 +56,7 @@ enable_testing()
 add_executable(litegdk_tests
     tests/unit/core/test_frame_runner.cpp
     tests/unit/core/test_lifecycle.cpp
+    tests/unit/images/test_image_registry.cpp
     tests/unit/runtime/test_diagnostics.cpp
     tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp

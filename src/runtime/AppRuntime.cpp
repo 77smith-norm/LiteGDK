@@ -42,6 +42,7 @@ void AppRuntime::reset() {
     displayDepth_ = kDefaultDisplayDepth;
     diagnostics_.clear();
     frameState_.reset();
+    images_.reset();
     text_.reset();
 }
 
@@ -122,6 +123,14 @@ FrameState& AppRuntime::frameState() {
 
 const FrameState& AppRuntime::frameState() const {
     return frameState_;
+}
+
+ImageRegistry& AppRuntime::images() {
+    return images_;
+}
+
+const ImageRegistry& AppRuntime::images() const {
+    return images_;
 }
 
 TextService& AppRuntime::text() {
