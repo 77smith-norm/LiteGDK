@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "images/ImageRegistry.h"
+#include "input/InputSnapshot.h"
 #include "Backend.h"
 #include "Diagnostics.h"
 #include "FrameState.h"
@@ -41,6 +42,8 @@ public:
 
     ImageRegistry& images();
     const ImageRegistry& images() const;
+    InputSnapshot& input();
+    const InputSnapshot& input() const;
     SpriteRegistry& sprites();
     const SpriteRegistry& sprites() const;
     TextService& text();
@@ -58,6 +61,7 @@ private:
     Diagnostics diagnostics_{};
     FrameState frameState_{};
     ImageRegistry images_{};
+    InputSnapshot input_{};
     SpriteRegistry sprites_{};
     TextService text_{};
 };

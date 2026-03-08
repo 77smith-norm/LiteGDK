@@ -33,6 +33,7 @@ void syncFrame() {
     }
 
     app.renderFrame();
+    app.input().capture(app.backend().pollInput());
     app.frameState().setClearRequested(false);
     app.frameState().advanceFrame();
     app.frameState().setFrameActive(false);

@@ -37,6 +37,7 @@ add_library(litegdk
     src/core/Lifecycle.cpp
     src/images/ImageCommands.cpp
     src/images/ImageRegistry.cpp
+    src/input/InputSnapshot.cpp
     src/runtime/AppRuntime.cpp
     src/runtime/Diagnostics.cpp
     src/runtime/FrameState.cpp
@@ -63,6 +64,7 @@ add_executable(litegdk_tests
     tests/unit/core/test_lifecycle.cpp
     tests/unit/images/test_image_commands.cpp
     tests/unit/images/test_image_registry.cpp
+    tests/unit/input/test_input_snapshot.cpp
     tests/unit/runtime/test_diagnostics.cpp
     tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp
