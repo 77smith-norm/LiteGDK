@@ -1,3 +1,3 @@
 #pragma once
 
-// Text command declarations land here.
+void dbText(int x, int y, const char* text);

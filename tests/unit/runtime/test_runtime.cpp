@@ -1,4 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
+
+#include "helpers/TestBackend.h"
 #include "runtime/AppRuntime.h"
 #include "runtime/FrameState.h"
 
@@ -47,6 +49,7 @@ TEST_CASE("FrameState tracks mutable frame settings", "[runtime]") {
 
 TEST_CASE("AppRuntime reset restores defaults", "[runtime]") {
     litegdk::AppRuntime runtime;
+    litegdk::tests::installTestBackend(runtime);
     runtime.initialize();
     runtime.frameState().advanceFrame();
     runtime.frameState().setSyncEnabled(false);

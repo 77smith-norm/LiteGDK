@@ -4,19 +4,10 @@
 #include <thread>
 
 #include "DarkGDK.h"
-#include "runtime/AppRuntime.h"
-
-namespace {
-struct RuntimeResetGuard {
-    ~RuntimeResetGuard() {
-        litegdk::runtime().reset();
-    }
-};
-}  // namespace
+#include "helpers/RuntimeTestContext.h"
 
 TEST_CASE("System helpers expose screen size, deterministic random, and timer values", "[system]") {
-    RuntimeResetGuard guard;
-    litegdk::runtime().reset();
+    litegdk::tests::RuntimeTestContext context;
 
     dbSetDisplayMode(1024, 768, 32);
     REQUIRE(dbScreenWidth() == 1024);

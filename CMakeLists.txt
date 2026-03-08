@@ -29,12 +29,16 @@ FetchContent_MakeAvailable(Catch2)
 # Library target
 add_library(litegdk
     src/compat/DarkGDK.cpp
+    src/compat/Text.cpp
+    src/backend/RaylibBackend.cpp
     src/core/FrameRunner.cpp
     src/core/Lifecycle.cpp
     src/runtime/AppRuntime.cpp
     src/runtime/Diagnostics.cpp
     src/runtime/FrameState.cpp
     src/system/SystemServices.cpp
+    src/text/TextCommands.cpp
+    src/text/TextService.cpp
 )
 target_include_directories(litegdk PUBLIC include)
 target_include_directories(litegdk PRIVATE src)
@@ -54,9 +58,11 @@ add_executable(litegdk_tests
     tests/unit/runtime/test_diagnostics.cpp
     tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp
+    tests/unit/text/test_text.cpp
     tests/unit/system/test_system.cpp
 )
 target_include_directories(litegdk_tests PRIVATE src)
+target_include_directories(litegdk_tests PRIVATE tests)
 target_link_libraries(litegdk_tests PRIVATE litegdk Catch2::Catch2WithMain)
 include(Catch)
 catch_discover_tests(litegdk_tests)
@@ -78,9 +84,19 @@ set_tests_properties(darkgdk_entrypoint_smoke PROPERTIES
 add_executable(darkgdk_loop_smoke
     tests/integration/core/test_loop_gdk.cpp
 )
-target_include_directories(darkgdk_loop_smoke PRIVATE src)
+target_include_directories(darkgdk_loop_smoke PRIVATE src tests)
 target_link_libraries(darkgdk_loop_smoke PRIVATE litegdk_entrypoint)
 add_test(NAME darkgdk_loop_smoke COMMAND darkgdk_loop_smoke)
 set_tests_properties(darkgdk_loop_smoke PROPERTIES
     PASS_REGULAR_EXPRESSION "LoopGDK iterations=1 frames=1 clear=0"
+)
+
+add_executable(darkgdk_text_smoke
+    tests/integration/text/test_text_smoke.cpp
+)
+target_include_directories(darkgdk_text_smoke PRIVATE src tests)
+target_link_libraries(darkgdk_text_smoke PRIVATE litegdk)
+add_test(NAME darkgdk_text_smoke COMMAND darkgdk_text_smoke)
+set_tests_properties(darkgdk_text_smoke PROPERTIES
+    PASS_REGULAR_EXPRESSION "Text draws=1 frames=1"
 )

@@ -2,10 +2,13 @@
 
 #include "DarkGDK.h"
 #include "core/Lifecycle.h"
+#include "helpers/TestBackend.h"
 #include "runtime/AppRuntime.h"
 
 void DarkGDK() {
     int iterations = 0;
+    auto& app = litegdk::runtime();
+    litegdk::tests::installTestBackend(app);
 
     dbSyncOn();
     dbSyncRate(30);
@@ -18,6 +21,6 @@ void DarkGDK() {
     }
 
     std::cout << "LoopGDK iterations=" << iterations
-              << " frames=" << litegdk::runtime().frameState().frameCount()
-              << " clear=" << litegdk::runtime().frameState().clearRequested() << "\n";
+              << " frames=" << app.frameState().frameCount()
+              << " clear=" << app.frameState().clearRequested() << "\n";
 }

@@ -2,20 +2,11 @@
 
 #include "DarkGDK.h"
 #include "core/Lifecycle.h"
-#include "runtime/AppRuntime.h"
-
-namespace {
-struct RuntimeResetGuard {
-    ~RuntimeResetGuard() {
-        litegdk::runtime().reset();
-    }
-};
-}  // namespace
+#include "helpers/RuntimeTestContext.h"
 
 TEST_CASE("Core lifecycle commands update runtime state", "[core][lifecycle]") {
-    RuntimeResetGuard guard;
-    auto& app = litegdk::runtime();
-    app.reset();
+    litegdk::tests::RuntimeTestContext context;
+    auto& app = context.app();
 
     REQUIRE_FALSE(app.isInitialized());
 

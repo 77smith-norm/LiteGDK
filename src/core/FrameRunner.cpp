@@ -32,6 +32,7 @@ void syncFrame() {
         beginFrame();
     }
 
+    app.renderFrame();
     app.frameState().setClearRequested(false);
     app.frameState().advanceFrame();
     app.frameState().setFrameActive(false);

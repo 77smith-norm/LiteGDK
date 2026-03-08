@@ -1,7 +1,11 @@
 #pragma once
 
+#include <memory>
+
+#include "Backend.h"
 #include "Diagnostics.h"
 #include "FrameState.h"
+#include "text/TextService.h"
 
 namespace litegdk {
 class AppRuntime {
@@ -20,13 +24,22 @@ public:
     int displayHeight() const;
     int displayDepth() const;
 
+    void applyBackendSettings();
     void setDisplayMode(int width, int height, int depth);
 
     Diagnostics& diagnostics();
     const Diagnostics& diagnostics() const;
 
+    Backend& backend();
+    const Backend& backend() const;
+    void setBackend(std::unique_ptr<Backend> backend);
+
     FrameState& frameState();
     const FrameState& frameState() const;
+
+    TextService& text();
+    const TextService& text() const;
+    void renderFrame();
 
 private:
     bool initialized_{false};
@@ -35,8 +48,10 @@ private:
     int displayWidth_{800};
     int displayHeight_{600};
     int displayDepth_{32};
+    std::unique_ptr<Backend> backend_{};
     Diagnostics diagnostics_{};
     FrameState frameState_{};
+    TextService text_{};
 };
 
 AppRuntime& runtime();

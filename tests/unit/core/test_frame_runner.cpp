@@ -1,20 +1,11 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "DarkGDK.h"
-#include "runtime/AppRuntime.h"
-
-namespace {
-struct RuntimeResetGuard {
-    ~RuntimeResetGuard() {
-        litegdk::runtime().reset();
-    }
-};
-}  // namespace
+#include "helpers/RuntimeTestContext.h"
 
 TEST_CASE("dbSync advances the frame lifecycle", "[core][frame]") {
-    RuntimeResetGuard guard;
-    auto& app = litegdk::runtime();
-    app.reset();
+    litegdk::tests::RuntimeTestContext context;
+    auto& app = context.app();
 
     REQUIRE(LoopGDK());
     REQUIRE(app.frameState().frameActive());

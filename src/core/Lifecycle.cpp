@@ -59,6 +59,11 @@ bool loop() {
     }
 
     ensureInitialized(app);
+    if (app.backend().shouldClose()) {
+        app.shutdown();
+        return false;
+    }
+
     beginFrame();
     return app.isRunning();
 }
