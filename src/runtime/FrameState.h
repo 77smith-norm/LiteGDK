@@ -24,6 +24,7 @@ public:
     int syncRate() const;
     Color clearColor() const;
     Color textColor() const;
+    Color textBackgroundColor() const;
 
     void setClearRequested(bool requested);
     void setFrameActive(bool active);
@@ -31,6 +32,7 @@ public:
     void setSyncRate(int rate);
     void setClearColor(Color color);
     void setTextColor(Color color);
+    void setTextBackgroundColor(Color color);
 
 private:
     std::uint64_t frameCount_{0};
@@ -40,5 +42,6 @@ private:
     int syncRate_{60};
     Color clearColor_{};
     Color textColor_{};
+    Color textBackgroundColor_{};
 };
 }  // namespace litegdk

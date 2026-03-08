@@ -26,3 +26,4 @@ LiteGDK tracks support at both the command-family and individual-command level d
 | Command | Family | Tier | Notes |
 | --- | --- | --- | --- |
 | `dbText` | Text | B | Draws queued 2D text during `dbSync()` using the backend default font at fixed size `20` |
+| `dbInk` | Text | C | Updates foreground text color for subsequent draws; background color is stored but not yet rendered behind glyphs |

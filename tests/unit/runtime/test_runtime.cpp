@@ -26,6 +26,12 @@ TEST_CASE("AppRuntime starts from deterministic defaults", "[runtime]") {
     REQUIRE(text.green == 255);
     REQUIRE(text.blue == 255);
     REQUIRE(text.alpha == 255);
+
+    const auto background = frame.textBackgroundColor();
+    REQUIRE(background.red == 0);
+    REQUIRE(background.green == 0);
+    REQUIRE(background.blue == 0);
+    REQUIRE(background.alpha == 255);
 }
 
 TEST_CASE("FrameState tracks mutable frame settings", "[runtime]") {
@@ -56,6 +62,7 @@ TEST_CASE("AppRuntime reset restores defaults", "[runtime]") {
     runtime.frameState().setSyncRate(15);
     runtime.frameState().setClearColor({90, 80, 70, 255});
     runtime.frameState().setTextColor({10, 20, 30, 255});
+    runtime.frameState().setTextBackgroundColor({30, 20, 10, 255});
 
     runtime.reset();
 
@@ -78,4 +85,10 @@ TEST_CASE("AppRuntime reset restores defaults", "[runtime]") {
     REQUIRE(text.green == 255);
     REQUIRE(text.blue == 255);
     REQUIRE(text.alpha == 255);
+
+    const auto background = frame.textBackgroundColor();
+    REQUIRE(background.red == 0);
+    REQUIRE(background.green == 0);
+    REQUIRE(background.blue == 0);
+    REQUIRE(background.alpha == 255);
 }

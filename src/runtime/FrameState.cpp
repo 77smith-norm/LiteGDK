@@ -4,6 +4,7 @@ namespace {
 constexpr int kDefaultSyncRate = 60;
 constexpr litegdk::Color kDefaultClearColor{0, 0, 0, 255};
 constexpr litegdk::Color kDefaultTextColor{255, 255, 255, 255};
+constexpr litegdk::Color kDefaultTextBackgroundColor{0, 0, 0, 255};
 }  // namespace
 
 namespace litegdk {
@@ -19,6 +20,7 @@ void FrameState::reset() {
     syncRate_ = kDefaultSyncRate;
     clearColor_ = kDefaultClearColor;
     textColor_ = kDefaultTextColor;
+    textBackgroundColor_ = kDefaultTextBackgroundColor;
 }
 
 void FrameState::advanceFrame() {
@@ -53,6 +55,10 @@ Color FrameState::textColor() const {
     return textColor_;
 }
 
+Color FrameState::textBackgroundColor() const {
+    return textBackgroundColor_;
+}
+
 void FrameState::setClearRequested(bool requested) {
     clearRequested_ = requested;
 }
@@ -75,5 +81,9 @@ void FrameState::setClearColor(Color color) {
 
 void FrameState::setTextColor(Color color) {
     textColor_ = color;
+}
+
+void FrameState::setTextBackgroundColor(Color color) {
+    textBackgroundColor_ = color;
 }
 }  // namespace litegdk
