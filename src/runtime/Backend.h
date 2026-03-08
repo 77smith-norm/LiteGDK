@@ -32,6 +32,16 @@ struct ImageLoadResult {
     int height{0};
 };
 
+struct SoundVolumeChange {
+    int soundId{0};
+    float volume{1.0f};
+};
+
+struct MusicVolumeChange {
+    int musicId{0};
+    float volume{1.0f};
+};
+
 struct BackendInputState {
     std::vector<int> downKeys{};
     int mouseX{0};
@@ -52,10 +62,23 @@ public:
     virtual void beginFrame(Color clearColor) = 0;
     virtual void drawText(const TextDrawCommand& command) = 0;
     virtual void drawSprite(const SpriteDrawCommand& command) = 0;
+    virtual void updateAudio() = 0;
     virtual void endFrame() = 0;
 
     virtual std::optional<ImageLoadResult> loadImage(int imageId, std::string_view path) = 0;
     virtual bool unloadImage(int imageId) = 0;
+    virtual bool loadSound(int soundId, std::string_view path) = 0;
+    virtual bool unloadSound(int soundId) = 0;
+    virtual bool playSound(int soundId) = 0;
+    virtual bool stopSound(int soundId) = 0;
+    virtual bool setSoundVolume(int soundId, float volume) = 0;
+    virtual bool loadMusic(int musicId, std::string_view path) = 0;
+    virtual bool unloadMusic(int musicId) = 0;
+    virtual bool playMusic(int musicId) = 0;
+    virtual bool stopMusic(int musicId) = 0;
+    virtual bool pauseMusic(int musicId) = 0;
+    virtual bool resumeMusic(int musicId) = 0;
+    virtual bool setMusicVolume(int musicId, float volume) = 0;
     virtual BackendInputState pollInput() const = 0;
 };
 

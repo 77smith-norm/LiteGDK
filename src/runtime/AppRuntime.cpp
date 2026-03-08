@@ -44,6 +44,8 @@ void AppRuntime::reset() {
     frameState_.reset();
     images_.reset();
     input_.reset();
+    sounds_.reset();
+    music_.reset();
     sprites_.reset();
     text_.reset();
 }
@@ -143,6 +145,22 @@ const InputSnapshot& AppRuntime::input() const {
     return input_;
 }
 
+SoundRegistry& AppRuntime::sounds() {
+    return sounds_;
+}
+
+const SoundRegistry& AppRuntime::sounds() const {
+    return sounds_;
+}
+
+MusicRegistry& AppRuntime::music() {
+    return music_;
+}
+
+const MusicRegistry& AppRuntime::music() const {
+    return music_;
+}
+
 SpriteRegistry& AppRuntime::sprites() {
     return sprites_;
 }
@@ -186,6 +204,7 @@ void AppRuntime::renderFrame() {
         backend_->drawText(command);
     }
 
+    backend_->updateAudio();
     backend_->endFrame();
     text_.clearQueuedCommands();
 }

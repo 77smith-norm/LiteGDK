@@ -31,6 +31,7 @@ add_library(litegdk
     src/compat/DarkGDK.cpp
     src/compat/Images.cpp
     src/compat/Input.cpp
+    src/compat/Sound.cpp
     src/compat/Sprites.cpp
     src/compat/Text.cpp
     src/backend/RaylibBackend.cpp
@@ -43,6 +44,7 @@ add_library(litegdk
     src/runtime/AppRuntime.cpp
     src/runtime/Diagnostics.cpp
     src/runtime/FrameState.cpp
+    src/sound/AudioCommands.cpp
     src/sound/MusicRegistry.cpp
     src/sound/SoundRegistry.cpp
     src/sprites/SpriteCommands.cpp
@@ -74,6 +76,7 @@ add_executable(litegdk_tests
     tests/unit/runtime/test_render_order.cpp
     tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp
+    tests/unit/sound/test_audio_commands.cpp
     tests/unit/sound/test_audio_registry.cpp
     tests/unit/sprites/test_sprite_commands.cpp
     tests/unit/sprites/test_sprite_registry.cpp
@@ -158,4 +161,14 @@ target_link_libraries(darkgdk_input_smoke PRIVATE litegdk)
 add_test(NAME darkgdk_input_smoke COMMAND darkgdk_input_smoke)
 set_tests_properties(darkgdk_input_smoke PROPERTIES
     PASS_REGULAR_EXPRESSION "Up=1 mouse=144,233 click=1"
+)
+
+add_executable(darkgdk_sound_smoke
+    tests/integration/sound/test_sound_smoke.cpp
+)
+target_include_directories(darkgdk_sound_smoke PRIVATE src tests)
+target_link_libraries(darkgdk_sound_smoke PRIVATE litegdk)
+add_test(NAME darkgdk_sound_smoke COMMAND darkgdk_sound_smoke)
+set_tests_properties(darkgdk_sound_smoke PROPERTIES
+    PASS_REGULAR_EXPRESSION "Sound plays=1 volume=35 Music plays=1 paused=1 resumed=1"
 )

@@ -32,14 +32,22 @@ public:
         if (syncRate > 0) {
             SetTargetFPS(syncRate);
         }
+
+        ensureAudioDeviceOpen();
     }
 
     void reset() override {
+        unloadAudio();
         unloadTextures();
 
         if (windowOpen_) {
             CloseWindow();
             windowOpen_ = false;
+        }
+
+        if (audioOpen_) {
+            CloseAudioDevice();
+            audioOpen_ = false;
         }
     }
 
@@ -87,6 +95,17 @@ public:
                       command.rotation,
                       command.scale,
                       toRaylibColor(command.tint));
+    }
+
+    void updateAudio() override {
+        if (!audioOpen_) {
+            return;
+        }
+
+        for (auto& [musicId, music] : music_) {
+            (void)musicId;
+            UpdateMusicStream(music);
+        }
     }
 
     void endFrame() override {
@@ -137,6 +156,152 @@ public:
         return true;
     }
 
+    bool loadSound(int soundId, std::string_view path) override {
+        ensureAudioDeviceOpen();
+        if (!audioOpen_) {
+            return false;
+        }
+
+        const auto sound = LoadSound(std::string(path).c_str());
+        if (sound.frameCount == 0 || sound.stream.buffer == nullptr) {
+            return false;
+        }
+
+        auto replaced = sounds_.find(soundId);
+        if (replaced != sounds_.end()) {
+            UnloadSound(replaced->second);
+            replaced->second = sound;
+        } else {
+            sounds_.insert_or_assign(soundId, sound);
+        }
+
+        return true;
+    }
+
+    bool unloadSound(int soundId) override {
+        const auto it = sounds_.find(soundId);
+        if (it == sounds_.end()) {
+            return false;
+        }
+
+        UnloadSound(it->second);
+        sounds_.erase(it);
+        return true;
+    }
+
+    bool playSound(int soundId) override {
+        const auto it = sounds_.find(soundId);
+        if (it == sounds_.end()) {
+            return false;
+        }
+
+        PlaySound(it->second);
+        return true;
+    }
+
+    bool stopSound(int soundId) override {
+        const auto it = sounds_.find(soundId);
+        if (it == sounds_.end()) {
+            return false;
+        }
+
+        StopSound(it->second);
+        return true;
+    }
+
+    bool setSoundVolume(int soundId, float volume) override {
+        const auto it = sounds_.find(soundId);
+        if (it == sounds_.end()) {
+            return false;
+        }
+
+        SetSoundVolume(it->second, volume);
+        return true;
+    }
+
+    bool loadMusic(int musicId, std::string_view path) override {
+        ensureAudioDeviceOpen();
+        if (!audioOpen_) {
+            return false;
+        }
+
+        auto music = LoadMusicStream(std::string(path).c_str());
+        if (music.frameCount == 0 || music.stream.buffer == nullptr) {
+            return false;
+        }
+
+        auto replaced = music_.find(musicId);
+        if (replaced != music_.end()) {
+            UnloadMusicStream(replaced->second);
+            replaced->second = music;
+        } else {
+            music_.insert_or_assign(musicId, music);
+        }
+
+        return true;
+    }
+
+    bool unloadMusic(int musicId) override {
+        const auto it = music_.find(musicId);
+        if (it == music_.end()) {
+            return false;
+        }
+
+        UnloadMusicStream(it->second);
+        music_.erase(it);
+        return true;
+    }
+
+    bool playMusic(int musicId) override {
+        const auto it = music_.find(musicId);
+        if (it == music_.end()) {
+            return false;
+        }
+
+        PlayMusicStream(it->second);
+        return true;
+    }
+
+    bool stopMusic(int musicId) override {
+        const auto it = music_.find(musicId);
+        if (it == music_.end()) {
+            return false;
+        }
+
+        StopMusicStream(it->second);
+        return true;
+    }
+
+    bool pauseMusic(int musicId) override {
+        const auto it = music_.find(musicId);
+        if (it == music_.end()) {
+            return false;
+        }
+
+        PauseMusicStream(it->second);
+        return true;
+    }
+
+    bool resumeMusic(int musicId) override {
+        const auto it = music_.find(musicId);
+        if (it == music_.end()) {
+            return false;
+        }
+
+        ResumeMusicStream(it->second);
+        return true;
+    }
+
+    bool setMusicVolume(int musicId, float volume) override {
+        const auto it = music_.find(musicId);
+        if (it == music_.end()) {
+            return false;
+        }
+
+        SetMusicVolume(it->second, volume);
+        return true;
+    }
+
     litegdk::BackendInputState pollInput() const override {
         if (!windowOpen_) {
             return {};
@@ -179,6 +344,13 @@ public:
     }
 
 private:
+    void ensureAudioDeviceOpen() {
+        if (!audioOpen_) {
+            InitAudioDevice();
+            audioOpen_ = IsAudioDeviceReady();
+        }
+    }
+
     void unloadTextures() {
         for (auto& [imageId, texture] : textures_) {
             (void)imageId;
@@ -188,8 +360,25 @@ private:
         textures_.clear();
     }
 
+    void unloadAudio() {
+        for (auto& [soundId, sound] : sounds_) {
+            (void)soundId;
+            UnloadSound(sound);
+        }
+        sounds_.clear();
+
+        for (auto& [musicId, music] : music_) {
+            (void)musicId;
+            UnloadMusicStream(music);
+        }
+        music_.clear();
+    }
+
     bool windowOpen_{false};
+    bool audioOpen_{false};
     std::unordered_map<int, Texture2D> textures_{};
+    std::unordered_map<int, Sound> sounds_{};
+    std::unordered_map<int, Music> music_{};
 };
 }  // namespace
 

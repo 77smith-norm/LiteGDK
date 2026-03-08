@@ -18,7 +18,7 @@ LiteGDK tracks support at both the command-family and individual-command level d
 | Input | C | Directional keys, selected action keys, generic mapped key-state queries, mouse position, and basic button-state queries are implemented |
 | Images | C | Image loading, existence, and size queries are implemented; deletion and advanced image manipulation are still pending |
 | Sprites | C | Basic sprite creation, visibility, position helpers, and existence queries are implemented; movement, rotation commands, and collision helpers are still pending |
-| Sound | X | Not yet implemented |
+| Sound | C | Basic sound/music loading, playback, stop/pause/resume, and volume control are implemented; channels, looping helpers, and status queries are still pending |
 | Basic3D | X | Not yet implemented |
 
 ## Commands
@@ -31,6 +31,18 @@ LiteGDK tracks support at both the command-family and individual-command level d
 | `dbImageExist` | Images | A | Returns whether an image slot currently contains metadata |
 | `dbGetImageWidth` | Images | A | Returns the stored width for a loaded image, or `0` for missing slots |
 | `dbGetImageHeight` | Images | A | Returns the stored height for a loaded image, or `0` for missing slots |
+| `dbLoadSound` | Sound | B | Loads a sound into an integer slot, replacing prior contents and emitting diagnostics for invalid handles or missing files |
+| `dbDeleteSound` | Sound | A | Removes a loaded sound slot when it exists |
+| `dbPlaySound` | Sound | B | Plays a previously loaded sound slot immediately |
+| `dbStopSound` | Sound | B | Stops a previously loaded sound slot |
+| `dbSetSoundVolume` | Sound | B | Sets per-sound volume using a clamped `0` to `100` range |
+| `dbLoadMusic` | Sound | B | Loads a music stream into an integer slot, replacing prior contents and emitting diagnostics for invalid handles or missing files |
+| `dbDeleteMusic` | Sound | A | Removes a loaded music slot when it exists |
+| `dbPlayMusic` | Sound | B | Starts playback for a previously loaded music slot |
+| `dbStopMusic` | Sound | B | Stops playback for a previously loaded music slot |
+| `dbPauseMusic` | Sound | B | Pauses playback for a previously loaded music slot |
+| `dbResumeMusic` | Sound | B | Resumes playback for a previously loaded music slot |
+| `dbSetMusicVolume` | Sound | B | Sets per-music volume using a clamped `0` to `100` range |
 | `dbSprite` | Sprites | B | Creates or replaces a sprite bound to a previously loaded image slot and renders it during `dbSync()` |
 | `dbDeleteSprite` | Sprites | A | Removes a sprite slot when it exists |
 | `dbHideSprite` | Sprites | A | Marks a stored sprite invisible without deleting it |

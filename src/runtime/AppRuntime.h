@@ -7,6 +7,8 @@
 #include "Backend.h"
 #include "Diagnostics.h"
 #include "FrameState.h"
+#include "sound/MusicRegistry.h"
+#include "sound/SoundRegistry.h"
 #include "sprites/SpriteRegistry.h"
 #include "text/TextService.h"
 
@@ -44,6 +46,10 @@ public:
     const ImageRegistry& images() const;
     InputSnapshot& input();
     const InputSnapshot& input() const;
+    SoundRegistry& sounds();
+    const SoundRegistry& sounds() const;
+    MusicRegistry& music();
+    const MusicRegistry& music() const;
     SpriteRegistry& sprites();
     const SpriteRegistry& sprites() const;
     TextService& text();
@@ -62,6 +68,8 @@ private:
     FrameState frameState_{};
     ImageRegistry images_{};
     InputSnapshot input_{};
+    SoundRegistry sounds_{};
+    MusicRegistry music_{};
     SpriteRegistry sprites_{};
     TextService text_{};
 };
