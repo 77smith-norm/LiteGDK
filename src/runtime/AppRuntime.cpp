@@ -43,6 +43,7 @@ void AppRuntime::reset() {
     diagnostics_.clear();
     frameState_.reset();
     images_.reset();
+    sprites_.reset();
     text_.reset();
 }
 
@@ -131,6 +132,14 @@ ImageRegistry& AppRuntime::images() {
 
 const ImageRegistry& AppRuntime::images() const {
     return images_;
+}
+
+SpriteRegistry& AppRuntime::sprites() {
+    return sprites_;
+}
+
+const SpriteRegistry& AppRuntime::sprites() const {
+    return sprites_;
 }
 
 TextService& AppRuntime::text() {

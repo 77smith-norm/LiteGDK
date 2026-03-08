@@ -39,6 +39,7 @@ add_library(litegdk
     src/runtime/AppRuntime.cpp
     src/runtime/Diagnostics.cpp
     src/runtime/FrameState.cpp
+    src/sprites/SpriteRegistry.cpp
     src/system/SystemServices.cpp
     src/text/TextCommands.cpp
     src/text/TextService.cpp
@@ -63,6 +64,7 @@ add_executable(litegdk_tests
     tests/unit/runtime/test_diagnostics.cpp
     tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp
+    tests/unit/sprites/test_sprite_registry.cpp
     tests/unit/text/test_text.cpp
     tests/unit/system/test_system.cpp
 )

@@ -6,6 +6,7 @@
 #include "Backend.h"
 #include "Diagnostics.h"
 #include "FrameState.h"
+#include "sprites/SpriteRegistry.h"
 #include "text/TextService.h"
 
 namespace litegdk {
@@ -40,6 +41,8 @@ public:
 
     ImageRegistry& images();
     const ImageRegistry& images() const;
+    SpriteRegistry& sprites();
+    const SpriteRegistry& sprites() const;
     TextService& text();
     const TextService& text() const;
     void renderFrame();
@@ -55,6 +58,7 @@ private:
     Diagnostics diagnostics_{};
     FrameState frameState_{};
     ImageRegistry images_{};
+    SpriteRegistry sprites_{};
     TextService text_{};
 };
 
