@@ -10,6 +10,10 @@
 #include "runtime/Backend.h"
 
 namespace litegdk::tests {
+struct RecordedDrawCall {
+    std::string label{};
+};
+
 class TestBackend final : public Backend {
 public:
     void applySettings(int width, int height, int depth, int syncRate) override {
@@ -27,6 +31,7 @@ public:
         lastClearColor = {};
         textDraws.clear();
         spriteDraws.clear();
+        drawCallSequence.clear();
         imageLoadRequests.clear();
         loadedImageIds.clear();
         unloadedImageIds.clear();
@@ -51,10 +56,16 @@ public:
 
     void drawText(const TextDrawCommand& command) override {
         textDraws.push_back(command);
+        drawCallSequence.push_back(RecordedDrawCall{
+            .label = "text:" + command.text,
+        });
     }
 
     void drawSprite(const SpriteDrawCommand& command) override {
         spriteDraws.push_back(command);
+        drawCallSequence.push_back(RecordedDrawCall{
+            .label = "sprite:" + std::to_string(command.spriteId),
+        });
     }
 
     void endFrame() override {
@@ -97,6 +108,7 @@ public:
     Settings settings{};
     std::vector<TextDrawCommand> textDraws{};
     std::vector<SpriteDrawCommand> spriteDraws{};
+    std::vector<RecordedDrawCall> drawCallSequence{};
     std::vector<std::string> imageLoadRequests{};
     std::vector<int> loadedImageIds{};
     std::vector<int> unloadedImageIds{};

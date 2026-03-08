@@ -49,3 +49,8 @@ LiteGDK tracks support at both the command-family and individual-command level d
 | `dbMouseX` | Input | A | Returns the captured mouse x-position |
 | `dbMouseY` | Input | A | Returns the captured mouse y-position |
 | `dbMouseClick` | Input | C | Returns `1` for left-button down, `2` for right-button down, or `0` for no current button down |
+
+## 2D Render Ordering
+
+- Visible sprites are submitted first during `dbSync()`, ordered by ascending sprite slot ID.
+- Queued text is submitted after sprites, preserving the order in which `dbText()` was called during the frame.

@@ -69,6 +69,7 @@ add_executable(litegdk_tests
     tests/unit/input/test_input_commands.cpp
     tests/unit/input/test_input_snapshot.cpp
     tests/unit/runtime/test_diagnostics.cpp
+    tests/unit/runtime/test_render_order.cpp
     tests/unit/runtime/test_registry.cpp
     tests/unit/runtime/test_runtime.cpp
     tests/unit/sprites/test_sprite_commands.cpp
@@ -134,6 +135,16 @@ target_link_libraries(darkgdk_sprite_smoke PRIVATE litegdk)
 add_test(NAME darkgdk_sprite_smoke COMMAND darkgdk_sprite_smoke)
 set_tests_properties(darkgdk_sprite_smoke PROPERTIES
     PASS_REGULAR_EXPRESSION "Sprite draws=1 image=1 x=14 y=22"
+)
+
+add_executable(darkgdk_render_order_smoke
+    tests/integration/sprites/test_render_order_smoke.cpp
+)
+target_include_directories(darkgdk_render_order_smoke PRIVATE src tests)
+target_link_libraries(darkgdk_render_order_smoke PRIVATE litegdk)
+add_test(NAME darkgdk_render_order_smoke COMMAND darkgdk_render_order_smoke)
+set_tests_properties(darkgdk_render_order_smoke PROPERTIES
+    PASS_REGULAR_EXPRESSION "Order=sprite:2,sprite:5,text:first,text:second"
 )
 
 add_executable(darkgdk_input_smoke
