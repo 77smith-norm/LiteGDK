@@ -3,11 +3,6 @@
 #include "Types.h"
 
 namespace litegdk {
-enum class ProjectionMode {
-    perspective,
-    orthographic,
-};
-
 class CameraState {
 public:
     CameraState();

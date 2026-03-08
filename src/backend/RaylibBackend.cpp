@@ -6,6 +6,7 @@
 
 #include "input/InputKeys.h"
 #include "raylib.h"
+#include "rlgl.h"
 
 namespace {
 Color toRaylibColor(litegdk::Color color) {
@@ -15,6 +16,24 @@ Color toRaylibColor(litegdk::Color color) {
         color.blue,
         color.alpha,
     };
+}
+
+::Vector3 toRaylibVector3(litegdk::Vector3 value) {
+    return ::Vector3{
+        value.x,
+        value.y,
+        value.z,
+    };
+}
+
+int toRaylibProjection(litegdk::ProjectionMode projectionMode) {
+    switch (projectionMode) {
+    case litegdk::ProjectionMode::orthographic:
+        return CAMERA_ORTHOGRAPHIC;
+    case litegdk::ProjectionMode::perspective:
+    default:
+        return CAMERA_PERSPECTIVE;
+    }
 }
 
 class RaylibBackend final : public litegdk::Backend {
@@ -66,6 +85,60 @@ public:
 
         BeginDrawing();
         ClearBackground(toRaylibColor(clearColor));
+    }
+
+    void begin3D(const litegdk::Camera3DDrawCommand& command) override {
+        if (!windowOpen_) {
+            return;
+        }
+
+        BeginMode3D(Camera3D{
+            .position = toRaylibVector3(command.position),
+            .target = toRaylibVector3(command.target),
+            .up = toRaylibVector3(command.up),
+            .fovy = command.fovDegrees,
+            .projection = toRaylibProjection(command.projectionMode),
+        });
+    }
+
+    void drawObject3D(const litegdk::Object3DDrawCommand& command) override {
+        if (!windowOpen_) {
+            return;
+        }
+
+        rlPushMatrix();
+        rlTranslatef(command.position.x, command.position.y, command.position.z);
+        rlRotatef(command.rotation.x, 1.0f, 0.0f, 0.0f);
+        rlRotatef(command.rotation.y, 0.0f, 1.0f, 0.0f);
+        rlRotatef(command.rotation.z, 0.0f, 0.0f, 1.0f);
+        rlScalef(command.scale.x, command.scale.y, command.scale.z);
+
+        switch (command.primitiveType) {
+        case litegdk::PrimitiveType::sphere:
+            DrawSphereEx(::Vector3{0.0f, 0.0f, 0.0f},
+                         command.radius,
+                         16,
+                         16,
+                         WHITE);
+            break;
+
+        case litegdk::PrimitiveType::cube:
+        default:
+            DrawCubeV(::Vector3{0.0f, 0.0f, 0.0f},
+                      toRaylibVector3(command.dimensions),
+                      WHITE);
+            break;
+        }
+
+        rlPopMatrix();
+    }
+
+    void end3D() override {
+        if (!windowOpen_) {
+            return;
+        }
+
+        EndMode3D();
     }
 
     void drawText(const litegdk::TextDrawCommand& command) override {

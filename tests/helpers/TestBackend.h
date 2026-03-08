@@ -29,10 +29,14 @@ public:
         initialized = false;
         beginFrameCount = 0;
         endFrameCount = 0;
+        begin3DCount = 0;
+        end3DCount = 0;
         audioUpdateCount = 0;
         lastClearColor = {};
+        lastCamera3D.reset();
         textDraws.clear();
         spriteDraws.clear();
+        objectDraws.clear();
         drawCallSequence.clear();
         imageLoadRequests.clear();
         soundLoadRequests.clear();
@@ -72,6 +76,19 @@ public:
     void beginFrame(Color clearColor) override {
         ++beginFrameCount;
         lastClearColor = clearColor;
+    }
+
+    void begin3D(const Camera3DDrawCommand& command) override {
+        ++begin3DCount;
+        lastCamera3D = command;
+    }
+
+    void drawObject3D(const Object3DDrawCommand& command) override {
+        objectDraws.push_back(command);
+    }
+
+    void end3D() override {
+        ++end3DCount;
     }
 
     void drawText(const TextDrawCommand& command) override {
@@ -249,12 +266,16 @@ public:
     bool initialized{false};
     int beginFrameCount{0};
     int endFrameCount{0};
+    int begin3DCount{0};
+    int end3DCount{0};
     int audioUpdateCount{0};
     bool shouldCloseFlag{false};
     Color lastClearColor{};
+    std::optional<Camera3DDrawCommand> lastCamera3D{};
     Settings settings{};
     std::vector<TextDrawCommand> textDraws{};
     std::vector<SpriteDrawCommand> spriteDraws{};
+    std::vector<Object3DDrawCommand> objectDraws{};
     std::vector<RecordedDrawCall> drawCallSequence{};
     std::vector<std::string> imageLoadRequests{};
     std::vector<std::string> soundLoadRequests{};

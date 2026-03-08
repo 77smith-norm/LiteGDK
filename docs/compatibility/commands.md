@@ -19,7 +19,7 @@ LiteGDK tracks support at both the command-family and individual-command level d
 | Images | C | Image loading, existence, and size queries are implemented; deletion and advanced image manipulation are still pending |
 | Sprites | C | Basic sprite creation, visibility, position helpers, and existence queries are implemented; movement, rotation commands, and collision helpers are still pending |
 | Sound | C | Basic sound/music loading, playback, stop/pause/resume, and volume control are implemented; channels, looping helpers, and status queries are still pending |
-| Basic3D | X | Not yet implemented |
+| Basic3D | C | Basic cube objects, object transform helpers, camera positioning/targeting, and frame-loop 3D submission are implemented; additional primitives and broader camera/object commands are still pending |
 
 ## Commands
 
@@ -43,6 +43,11 @@ LiteGDK tracks support at both the command-family and individual-command level d
 | `dbPauseMusic` | Sound | B | Pauses playback for a previously loaded music slot |
 | `dbResumeMusic` | Sound | B | Resumes playback for a previously loaded music slot |
 | `dbSetMusicVolume` | Sound | B | Sets per-music volume using a clamped `0` to `100` range |
+| `dbMakeObjectCube` | Basic3D | B | Creates or replaces a cube primitive using a uniform size and stores it in an integer object slot |
+| `dbPositionObject` | Basic3D | B | Updates the stored x/y/z position for an existing 3D object slot |
+| `dbRotateObject` | Basic3D | B | Updates the stored x/y/z rotation for an existing 3D object slot and applies it during 3D submission |
+| `dbPositionCamera` | Basic3D | B | Updates the runtime camera position used for 3D submission |
+| `dbPointCamera` | Basic3D | B | Updates the runtime camera target used for 3D submission |
 | `dbSprite` | Sprites | B | Creates or replaces a sprite bound to a previously loaded image slot and renders it during `dbSync()` |
 | `dbDeleteSprite` | Sprites | A | Removes a sprite slot when it exists |
 | `dbHideSprite` | Sprites | A | Marks a stored sprite invisible without deleting it |
@@ -66,3 +71,8 @@ LiteGDK tracks support at both the command-family and individual-command level d
 
 - Visible sprites are submitted first during `dbSync()`, ordered by ascending sprite slot ID.
 - Queued text is submitted after sprites, preserving the order in which `dbText()` was called during the frame.
+
+## 3D Render Ordering
+
+- Visible 3D objects are submitted during `dbSync()` before 2D sprites and text.
+- The current runtime camera state is snapshotted once per 3D pass and used for all object draws in that frame.

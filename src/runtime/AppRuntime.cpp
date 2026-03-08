@@ -42,6 +42,8 @@ void AppRuntime::reset() {
     displayDepth_ = kDefaultDisplayDepth;
     diagnostics_.clear();
     frameState_.reset();
+    camera_.reset();
+    objects_.reset();
     images_.reset();
     input_.reset();
     sounds_.reset();
@@ -145,6 +147,22 @@ const InputSnapshot& AppRuntime::input() const {
     return input_;
 }
 
+CameraState& AppRuntime::camera() {
+    return camera_;
+}
+
+const CameraState& AppRuntime::camera() const {
+    return camera_;
+}
+
+ObjectRegistry& AppRuntime::objects() {
+    return objects_;
+}
+
+const ObjectRegistry& AppRuntime::objects() const {
+    return objects_;
+}
+
 SoundRegistry& AppRuntime::sounds() {
     return sounds_;
 }
@@ -183,6 +201,34 @@ void AppRuntime::renderFrame() {
     }
 
     backend_->beginFrame(frameState_.clearColor());
+
+    if (objects_.activeCount() > 0) {
+        backend_->begin3D(Camera3DDrawCommand{
+            .position = camera_.position(),
+            .target = camera_.target(),
+            .up = camera_.up(),
+            .fovDegrees = camera_.fovDegrees(),
+            .projectionMode = camera_.projectionMode(),
+        });
+
+        objects_.forEach([this](int objectId, const Object3D& object) {
+            if (!object.visible) {
+                return;
+            }
+
+            backend_->drawObject3D(Object3DDrawCommand{
+                .objectId = objectId,
+                .primitiveType = object.primitiveType,
+                .dimensions = object.dimensions,
+                .radius = object.radius,
+                .position = object.position,
+                .rotation = object.rotation,
+                .scale = object.scale,
+            });
+        });
+
+        backend_->end3D();
+    }
 
     sprites_.forEach([this](int spriteId, const SpriteState& sprite) {
         if (!sprite.visible || !images_.exists(sprite.imageId)) {

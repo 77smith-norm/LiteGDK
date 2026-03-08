@@ -6,6 +6,7 @@
 #include <string_view>
 #include <vector>
 
+#include "basic3d/Types.h"
 #include "FrameState.h"
 
 namespace litegdk {
@@ -25,6 +26,24 @@ struct SpriteDrawCommand {
     float rotation{0.0f};
     float scale{1.0f};
     Color tint{255, 255, 255, 255};
+};
+
+struct Camera3DDrawCommand {
+    Vector3 position{};
+    Vector3 target{};
+    Vector3 up{0.0f, 1.0f, 0.0f};
+    float fovDegrees{45.0f};
+    ProjectionMode projectionMode{ProjectionMode::perspective};
+};
+
+struct Object3DDrawCommand {
+    int objectId{0};
+    PrimitiveType primitiveType{PrimitiveType::cube};
+    Vector3 dimensions{1.0f, 1.0f, 1.0f};
+    float radius{0.5f};
+    Vector3 position{};
+    Vector3 rotation{};
+    Vector3 scale{1.0f, 1.0f, 1.0f};
 };
 
 struct ImageLoadResult {
@@ -60,6 +79,9 @@ public:
     virtual bool shouldClose() const = 0;
 
     virtual void beginFrame(Color clearColor) = 0;
+    virtual void begin3D(const Camera3DDrawCommand& command) = 0;
+    virtual void drawObject3D(const Object3DDrawCommand& command) = 0;
+    virtual void end3D() = 0;
     virtual void drawText(const TextDrawCommand& command) = 0;
     virtual void drawSprite(const SpriteDrawCommand& command) = 0;
     virtual void updateAudio() = 0;

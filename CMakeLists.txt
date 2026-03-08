@@ -29,12 +29,14 @@ FetchContent_MakeAvailable(Catch2)
 # Library target
 add_library(litegdk
     src/compat/DarkGDK.cpp
+    src/compat/Basic3D.cpp
     src/compat/Images.cpp
     src/compat/Input.cpp
     src/compat/Sound.cpp
     src/compat/Sprites.cpp
     src/compat/Text.cpp
     src/backend/RaylibBackend.cpp
+    src/basic3d/Basic3DCommands.cpp
     src/basic3d/CameraState.cpp
     src/basic3d/ObjectRegistry.cpp
     src/core/FrameRunner.cpp
@@ -69,6 +71,7 @@ target_link_libraries(litegdk_entrypoint PUBLIC litegdk)
 enable_testing()
 add_executable(litegdk_tests
     tests/unit/basic3d/test_camera_state.cpp
+    tests/unit/basic3d/test_basic3d_commands.cpp
     tests/unit/basic3d/test_object_registry.cpp
     tests/unit/core/test_frame_runner.cpp
     tests/unit/core/test_lifecycle.cpp
@@ -175,4 +178,14 @@ target_link_libraries(darkgdk_sound_smoke PRIVATE litegdk)
 add_test(NAME darkgdk_sound_smoke COMMAND darkgdk_sound_smoke)
 set_tests_properties(darkgdk_sound_smoke PROPERTIES
     PASS_REGULAR_EXPRESSION "Sound plays=1 volume=35 Music plays=1 paused=1 resumed=1"
+)
+
+add_executable(darkgdk_basic3d_smoke
+    tests/integration/basic3d/test_basic3d_smoke.cpp
+)
+target_include_directories(darkgdk_basic3d_smoke PRIVATE src tests)
+target_link_libraries(darkgdk_basic3d_smoke PRIVATE litegdk)
+add_test(NAME darkgdk_basic3d_smoke COMMAND darkgdk_basic3d_smoke)
+set_tests_properties(darkgdk_basic3d_smoke PROPERTIES
+    PASS_REGULAR_EXPRESSION "3D begin=1 draws=1 object=7 pos=3,4,5 camera=0,2,-20"
 )

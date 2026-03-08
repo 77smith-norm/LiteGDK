@@ -7,11 +7,6 @@
 #include "runtime/Registry.h"
 
 namespace litegdk {
-enum class PrimitiveType {
-    cube,
-    sphere,
-};
-
 struct Object3D {
     PrimitiveType primitiveType{PrimitiveType::cube};
     Vector3 dimensions{1.0f, 1.0f, 1.0f};

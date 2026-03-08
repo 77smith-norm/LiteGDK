@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include "basic3d/CameraState.h"
+#include "basic3d/ObjectRegistry.h"
 #include "images/ImageRegistry.h"
 #include "input/InputSnapshot.h"
 #include "Backend.h"
@@ -46,6 +48,10 @@ public:
     const ImageRegistry& images() const;
     InputSnapshot& input();
     const InputSnapshot& input() const;
+    CameraState& camera();
+    const CameraState& camera() const;
+    ObjectRegistry& objects();
+    const ObjectRegistry& objects() const;
     SoundRegistry& sounds();
     const SoundRegistry& sounds() const;
     MusicRegistry& music();
@@ -66,6 +72,8 @@ private:
     std::unique_ptr<Backend> backend_{};
     Diagnostics diagnostics_{};
     FrameState frameState_{};
+    CameraState camera_{};
+    ObjectRegistry objects_{};
     ImageRegistry images_{};
     InputSnapshot input_{};
     SoundRegistry sounds_{};
