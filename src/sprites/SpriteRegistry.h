@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <utility>
 
 #include "runtime/FrameState.h"
 #include "runtime/Registry.h"
@@ -27,6 +28,11 @@ public:
     bool remove(int spriteId);
     std::size_t activeCount() const;
     void reset();
+
+    template <typename Fn>
+    void forEach(Fn&& fn) const {
+        sprites_.forEach(std::forward<Fn>(fn));
+    }
 
 private:
     Registry<SpriteState> sprites_{};

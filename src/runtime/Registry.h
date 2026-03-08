@@ -68,6 +68,17 @@ public:
         return activeCount_;
     }
 
+    template <typename Fn>
+    void forEach(Fn&& fn) const {
+        for (std::size_t index = 0; index < slots_.size(); ++index) {
+            if (!slots_[index].has_value()) {
+                continue;
+            }
+
+            fn(indexToHandle(index), slots_[index].value());
+        }
+    }
+
 private:
     std::vector<std::optional<T>> slots_{};
     std::size_t activeCount_{0};

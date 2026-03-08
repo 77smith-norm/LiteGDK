@@ -157,6 +157,22 @@ void AppRuntime::renderFrame() {
 
     backend_->beginFrame(frameState_.clearColor());
 
+    sprites_.forEach([this](int spriteId, const SpriteState& sprite) {
+        if (!sprite.visible || !images_.exists(sprite.imageId)) {
+            return;
+        }
+
+        backend_->drawSprite(SpriteDrawCommand{
+            .spriteId = spriteId,
+            .imageId = sprite.imageId,
+            .x = sprite.x,
+            .y = sprite.y,
+            .rotation = sprite.rotationDegrees,
+            .scale = sprite.scale,
+            .tint = sprite.tint,
+        });
+    });
+
     for (const auto& command : text_.queuedCommands()) {
         backend_->drawText(command);
     }

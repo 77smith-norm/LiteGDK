@@ -10,4 +10,8 @@ constexpr bool isValidHandle(int handle) {
 constexpr std::size_t handleToIndex(int handle) {
     return static_cast<std::size_t>(handle - 1);
 }
+
+constexpr int indexToHandle(std::size_t index) {
+    return static_cast<int>(index + 1);
+}
 }  // namespace litegdk
