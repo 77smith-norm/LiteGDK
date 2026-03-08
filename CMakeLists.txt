@@ -30,6 +30,7 @@ FetchContent_MakeAvailable(Catch2)
 add_library(litegdk
     src/compat/DarkGDK.cpp
     src/compat/Images.cpp
+    src/compat/Input.cpp
     src/compat/Sprites.cpp
     src/compat/Text.cpp
     src/backend/RaylibBackend.cpp
@@ -37,6 +38,7 @@ add_library(litegdk
     src/core/Lifecycle.cpp
     src/images/ImageCommands.cpp
     src/images/ImageRegistry.cpp
+    src/input/InputCommands.cpp
     src/input/InputSnapshot.cpp
     src/runtime/AppRuntime.cpp
     src/runtime/Diagnostics.cpp
@@ -64,6 +66,7 @@ add_executable(litegdk_tests
     tests/unit/core/test_lifecycle.cpp
     tests/unit/images/test_image_commands.cpp
     tests/unit/images/test_image_registry.cpp
+    tests/unit/input/test_input_commands.cpp
     tests/unit/input/test_input_snapshot.cpp
     tests/unit/runtime/test_diagnostics.cpp
     tests/unit/runtime/test_registry.cpp
@@ -131,4 +134,14 @@ target_link_libraries(darkgdk_sprite_smoke PRIVATE litegdk)
 add_test(NAME darkgdk_sprite_smoke COMMAND darkgdk_sprite_smoke)
 set_tests_properties(darkgdk_sprite_smoke PROPERTIES
     PASS_REGULAR_EXPRESSION "Sprite draws=1 image=1 x=14 y=22"
+)
+
+add_executable(darkgdk_input_smoke
+    tests/integration/input/test_input_smoke.cpp
+)
+target_include_directories(darkgdk_input_smoke PRIVATE src tests)
+target_link_libraries(darkgdk_input_smoke PRIVATE litegdk)
+add_test(NAME darkgdk_input_smoke COMMAND darkgdk_input_smoke)
+set_tests_properties(darkgdk_input_smoke PROPERTIES
+    PASS_REGULAR_EXPRESSION "Up=1 mouse=144,233 click=1"
 )

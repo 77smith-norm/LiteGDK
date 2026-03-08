@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <utility>
 
+#include "input/InputKeys.h"
 #include "raylib.h"
 
 namespace {
@@ -137,7 +138,44 @@ public:
     }
 
     litegdk::BackendInputState pollInput() const override {
-        return {};
+        if (!windowOpen_) {
+            return {};
+        }
+
+        litegdk::BackendInputState state;
+        if (IsKeyDown(KEY_UP)) {
+            state.downKeys.push_back(litegdk::kInputKeyUp);
+        }
+
+        if (IsKeyDown(KEY_DOWN)) {
+            state.downKeys.push_back(litegdk::kInputKeyDown);
+        }
+
+        if (IsKeyDown(KEY_LEFT)) {
+            state.downKeys.push_back(litegdk::kInputKeyLeft);
+        }
+
+        if (IsKeyDown(KEY_RIGHT)) {
+            state.downKeys.push_back(litegdk::kInputKeyRight);
+        }
+
+        if (IsKeyDown(KEY_SPACE)) {
+            state.downKeys.push_back(litegdk::kInputKeySpace);
+        }
+
+        if (IsKeyDown(KEY_ESCAPE)) {
+            state.downKeys.push_back(litegdk::kInputKeyEscape);
+        }
+
+        if (IsKeyDown(KEY_ENTER)) {
+            state.downKeys.push_back(litegdk::kInputKeyReturn);
+        }
+
+        state.mouseX = GetMouseX();
+        state.mouseY = GetMouseY();
+        state.leftButtonDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+        state.rightButtonDown = IsMouseButtonDown(MOUSE_BUTTON_RIGHT);
+        return state;
     }
 
 private:

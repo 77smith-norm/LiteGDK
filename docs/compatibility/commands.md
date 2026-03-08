@@ -15,7 +15,7 @@ LiteGDK tracks support at both the command-family and individual-command level d
 | --- | --- | --- |
 | Core | C | Entrypoint, lifecycle shell, and basic system helpers implemented; rendering and backend window behavior still incomplete |
 | Text | C | `dbText` is implemented with queued 2D submission and the backend default font; alignment and style helpers are still pending |
-| Input | X | Not yet implemented |
+| Input | C | Directional keys, selected action keys, generic mapped key-state queries, mouse position, and basic button-state queries are implemented |
 | Images | C | Image loading, existence, and size queries are implemented; deletion and advanced image manipulation are still pending |
 | Sprites | C | Basic sprite creation, visibility, position helpers, and existence queries are implemented; movement, rotation commands, and collision helpers are still pending |
 | Sound | X | Not yet implemented |
@@ -38,3 +38,14 @@ LiteGDK tracks support at both the command-family and individual-command level d
 | `dbXSprite` | Sprites | B | Updates a stored sprite’s x-position |
 | `dbYSprite` | Sprites | B | Updates a stored sprite’s y-position |
 | `dbSpriteExist` | Sprites | A | Returns whether a sprite slot currently exists |
+| `dbUpKey` | Input | A | Returns whether the mapped Up key is currently down in the captured snapshot |
+| `dbDownKey` | Input | A | Returns whether the mapped Down key is currently down in the captured snapshot |
+| `dbLeftKey` | Input | A | Returns whether the mapped Left key is currently down in the captured snapshot |
+| `dbRightKey` | Input | A | Returns whether the mapped Right key is currently down in the captured snapshot |
+| `dbSpaceKey` | Input | A | Returns whether the mapped Space key is currently down in the captured snapshot |
+| `dbEscapeKey` | Input | A | Returns whether the mapped Escape key is currently down in the captured snapshot |
+| `dbReturnKey` | Input | A | Returns whether the mapped Return key is currently down in the captured snapshot |
+| `dbKeyState` | Input | C | Returns key state for the currently mapped educational key subset (`Up`, `Down`, `Left`, `Right`, `Space`, `Escape`, `Return`) |
+| `dbMouseX` | Input | A | Returns the captured mouse x-position |
+| `dbMouseY` | Input | A | Returns the captured mouse y-position |
+| `dbMouseClick` | Input | C | Returns `1` for left-button down, `2` for right-button down, or `0` for no current button down |
