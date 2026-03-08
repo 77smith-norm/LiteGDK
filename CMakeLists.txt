@@ -191,3 +191,23 @@ add_test(NAME darkgdk_basic3d_smoke COMMAND darkgdk_basic3d_smoke)
 set_tests_properties(darkgdk_basic3d_smoke PROPERTIES
     PASS_REGULAR_EXPRESSION "3D begin=1 draws=1 object=7 pos=3,4,5 camera=0,2,-20"
 )
+
+add_executable(darkgdk_arcade_sample_smoke
+    tests/integration/samples/test_arcade_sample.cpp
+)
+target_include_directories(darkgdk_arcade_sample_smoke PRIVATE src tests)
+target_link_libraries(darkgdk_arcade_sample_smoke PRIVATE litegdk_entrypoint)
+add_test(NAME darkgdk_arcade_sample_smoke COMMAND darkgdk_arcade_sample_smoke)
+set_tests_properties(darkgdk_arcade_sample_smoke PROPERTIES
+    PASS_REGULAR_EXPRESSION "Sample=arcade sprite=1 x=326 y=244 text=4"
+)
+
+add_executable(darkgdk_multimedia_sample_smoke
+    tests/integration/samples/test_multimedia_sample.cpp
+)
+target_include_directories(darkgdk_multimedia_sample_smoke PRIVATE src tests)
+target_link_libraries(darkgdk_multimedia_sample_smoke PRIVATE litegdk_entrypoint)
+add_test(NAME darkgdk_multimedia_sample_smoke COMMAND darkgdk_multimedia_sample_smoke)
+set_tests_properties(darkgdk_multimedia_sample_smoke PROPERTIES
+    PASS_REGULAR_EXPRESSION "Sample=multimedia3d plays=1 draws=2 rotationY=30 cameraZ=-18"
+)
